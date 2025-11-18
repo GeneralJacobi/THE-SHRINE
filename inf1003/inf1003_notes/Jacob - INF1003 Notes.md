@@ -2152,3 +2152,8 @@ set: set of people
 (Bob, Carol) = Bob is taller than Carol  
 
 therefore, (Alice, Carol) can be concluded
+
+to disprove,  
+steps:  
+find all journeys of 2 step  
+find journey that does not have one step shortcut
