@@ -1672,6 +1672,61 @@ Tx power:
 - Class 2: 4dBm (2.5mW) - 10m range  
 - Class 3: 0dBm (1mW) - 1m range
 
+#### Multiple BT device network
+
+Piconet:  
+consists of BT devices sharing common channel  
+one master  
+Max 7 active slave nodes  
+slave only transmit when master erquests
+master can be slave of another net
+
+Scatternet:  
+interconnecting multiple pico nets  
+about 10.
+
+#### Freq hopping (FH) / Freq Hopping Spread Spectrum
+
+rapidly change carrier freq among many distinct freq occupying large spectral band  
+make jamming and interception more difficult  
+
+master node sets the FH sequence  
+FH sequ is a function of master node address
+
+Band: 2402-2480 MHz  
+79 chans, 1Mhz bandwidth  
+FH follow pseudo random sequence  
+All devices on piconet share same sequence (master, active slave, parked slave)  
+1,3,5 packet length  
+625 micro second packet slot  
+transmission follows pattern: master -> slave -> master -> slave
+
+Collision possible if two piconets use same physical channel
+
+#### Time Division Duplex / Time Divisino Multiple Access
+
+Time Division Duplexing (TDD)  
+Data transmission alternates between two directions, Transmit and recieve  
+
+Multiple devices share piconet needs another method  
+Time Division Multiple Access  
+
+FH:  
+![freq-hopping](jacob-images/freq-hopping.png)
+
+TDD:  
+![TDD](jacob-images/TDD.png)
+
+TDMA:  
+![TDMA](jacob-images/TDMA.png)
+
+
+#### BT packet format  
+
+|Access Code|Baseband/Link Control Header|Data Payload|
+|-|-|-|
+|72 bit|54 bit|0-2745 bit|
+
 ## Secondary Memory Subsystems (Chpt 8)
 
 ### Memory Hierachy

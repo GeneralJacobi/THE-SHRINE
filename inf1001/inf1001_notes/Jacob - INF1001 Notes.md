@@ -1374,4 +1374,308 @@ O(n) VS O(log n)
 ![algo-n-vs-log-n-search](jacob-images/algo-n-vs-log-n-search.png)
 
 
+In terms of performance:  
 O(1):
+Constant time.  
+Any algo that eventually boils down to a constant number regardless of input will be part of O(1)
+does not loop or loops constant numebr of times
+
+O(log n)  
+log generally is log 2 but for calculator can do log10(n) / log10(2)  
+can actually be logx(n) but boils down to log n  
+loop executes n times that is divided/multiplies by constant amount
+
+O(n logn)
+combination og O(n) and O(log n)
+
+O(n):  
+loops n times, increment/decrement by constant amount
+
+O(n^2)
+scales with input squared
+Time complexity of nested loop equal to number of times innner most statement is executed
+
+O(n^3)
+scales with input cube
+nested loop in a nested loop
+
+
+
+# Topic 9 Security
+
+Information as assets  
+
+Physical assets:  
+- Tangible
+- Less Scalable
+- Incremental cost to produce
+- Transport via supply chain
+
+e.g. :  
+- Cash
+- land
+- equipment
+- inventory
+- machinery
+- furniture
+- stock
+- bonds
+
+Information Assets:
+- Intangible
+- Highly scalable
+- Increasingly valued
+- Cost varied
+- Instant delivery
+
+e.g. :  
+- Patents
+- Trademarks
+- Copyrights
+- Brand recognition
+- goodwill
+- internet domain name
+- Customer list
+- employment contract
+
+## CIA Triangle
+
+### Confidentiality
+
+Information is only disclosed to those with rights to know
+
+### Integrity
+
+Information is correct and not manipulated in any way
+
+### Availabiliity
+
+Information is accessible and usable at all times
+
+## Types of attacks
+
+Social engineering: manipulating people into performing actions or divulging confidential information  
+
+Types:  
+- Phishing
+- Spear-phishing
+- Voice phishing (Vishing)
+- SMS phishing (Smishing)
+- Mining Social media
+- Man-in-the-middle
+- Man-in-the-browser
+
+Malware:  
+- Virus
+  - infect host, spread/embed iself within another program / file
+- Worm
+  - autonomous program, transfer self through network
+- Trojan horse
+  - enter computer disguised as desireable program with harmful effects
+- Spyware
+  - Collects information about activities and report back
+- Adware
+  - hides on device, serves you advertistments
+- ransomware
+  - encrypts victims files, demands ransom from victim to restore access to data
+
+Denial-of-Service (DOS)  
+- Process of overloading system with messages  
+- Software can be planted on unsuspecting systems to generate messages
+
+Distributed Denial-of-Service (DDOS)  
+- Multiple systems flood bandwidth or resources of targeted system
+- usually with othere compromised machines
+
+Botnets
+- Common payload like worm / trojan used to infect
+- Large network of compromise dcomputers
+- Can communicate to commit DDOS / spam / phishing 
+
+Spam  
+abundance of unwanted messages
+
+Hacker: Person who seeks and exploits weaknesses in a computer system / network without authorisation for fun, profit or social causes
+
+Black hat: criminals with malicious intent
+white hat: security experts, use skills to identify vulnerabilities
+grey hat: mix of both
+
+## Protections
+
+### Firewall
+
+installed between intranet and gateway  
+filter traffic  
+may be physical hardware  
+filters IP addresses, ports, protocols, etc
+
+### Proxy server
+
+Firewall vs proxy server  
+
+||Firewall|Proxy server|
+|-|-|-|
+|Basic|Monitor & filter incoming / outgoing traffic in local network|Establish communication between external client and server|
+|Filters|Ip Packets|Client-side requests for the connection|
+|Generated overhead|More|Less|
+|Layer|Network and transport layer|Application layer|
+
+act as intermediary between client and server, sheild client from advers actions of server  
+filters requests coming from unknown clients  
+stops server from learning about intranet internal feature  
+filter all messages from server to client
+
+### Network Auditing Software
+
+Determin weaknesses/vulnerabilities in network/system  
+can be use to proactivly identify and fix vulnerabilities  
+can be abused by attackers to probe for vulnerabilities before exploiting them
+
+### Anti-Virus
+
+Detect and remove presence of virus
+
+### Secured Connection - SSL
+
+Secure protocols to protect traffic  
+FTPS, HTTPS
+
+Use Secure Socket Layer (SSL) and Transport Layer Security (TLS)
+- Internet secuurity protocol which encrypt connection between browser and website
+
+### Authentication
+
+Passwords
+
+Biometric info like fingerprint
+
+2FA (2 factor authentication) using digital tokens
+- password + one time password
+
+Something you know  
+Something you have  
+Somethign you are
+
+### Cryptography
+
+Science of 'secret' writing  
+- render message less meaningful to any eavesdropper  
+
+Process of encryption  
+- plaintext is encrypted, then sent
+
+Process of decyption  
+- ciphertext is decoded when recieved
+
+Types:  
+Symmetric  
+- use same secret key to encrypt/decrypt
+- but how send key securely?
+- e.g.: Caesar, block, DES, AES
+
+Asymmetric  
+- different keys to encrypt/decrypt  
+- e.g. RSA
+
+Stream Ciphers  
+- Encrypts data one char at a time  
+- maintains structure of data
+
+Block Ciphers  
+- Encrypts blocks of text at a time  
+- destroyes structure of plaintext
+- make decryption without key more difficult
+
+#### Hill Cipcher
+
+![hill-cipher-1](jacob-images/hill-cipher-1.png)  
+![hill-cipher-2](jacob-images/hill-cipher-2.png)  
+![hill-cipher-3](jacob-images/hill-cipher-3.png)
+
+#### Data Encryption Standard (DES)
+
+Block cipher,  
+block = 64 bits  
+plaintext 64 bits -> ciphertext 64 bits  
+64bit key (56bit + 8 parity bit)  
+given same plaintext and key, DES will return same ciphertext  
+
+![DES-base](jacob-images/DES-base.png)
+
+DES enhancement  
+- 1976: DES approved as standard
+- 1994: 1st experimental cryptanalysis of DES  
+- 1997: DESCHALL Project breaks DES message for 1st time  
+- 1999: DES key broken in 22hrs 15mins  
+
+Triple DES
+- Native approch requires 2x 56bit key
+- encode with key1, decode with key2, encrypt with key1 again
+- run DES 3 time
+
+
+#### Public Key Systems  
+
+Recipient has pair of keys:  
+- Public key, share with public to encrypt messages with  
+- Private key only known to recipient
+
+how to ensure public key is correct and not impostor?
+use certificate authority (server that checks if public key and private key match, then issues certificate that says 'This public key is legit, i checked')  
+Cert contains party's name and public key  
+
+How to check signature?  
+Private key holder Send message encrypted with own private key  
+Server recieves message, decrypt with public key.  
+If can decrypt, public key is valid, without having to see private key
+
+RSA  **THIS MATH IS TESTED**  
+Ron **Rivest**, Adi **Shamir**, Leonard **Adleman**
+
+RSA success because extremely difficult to find prime factor of n if n is very large
+
+- steps: 
+- random choose large p and q prime numbers
+- compute n = p*q  
+- compute m = (p-1)*(q-1)
+- choose e such that GCD(e,m) = 1, no common factors, e = public exponent
+- compute d such that (d*e) mod m = 1, d = private exponent
+
+(n,e) is public key
+(d) is private key
+
+P = Plaintext, C = ciphertext  
+
+Encryption: $C = P^e mod n$  
+Decryption: $P = C^d mod n$
+
+attackers don't know d,  
+cannot guess d becaue don't know m,  
+cannot guess m because m =(p-1)*(q-1),  n = p\*q which are both prime and big,  
+hard to find prime factorisation of big num
+
+RSA 1024 bit  
+2048 bit  
+4096 bit
+
+#### Pros and cons
+
+Symmetric:  
+- Faster
+- Shorter key
+- Simpler to implement
+- Used for encrypting large amounts of data
+- use case:  
+  - Banking: Encrypt credit card info
+  - Data storage: Encrypt data stored on device or cloud
+
+Asymmetric:  
+- More secure key transmission
+- Longer keys
+- Different keys for encryption/decryption
+- Used for encrypting small amounts of datas
+- use case
+  - Digital signature
+  - Blockchain
+  - Public Key Infrastructure
