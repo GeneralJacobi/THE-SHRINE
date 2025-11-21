@@ -1872,6 +1872,14 @@ RAID 10
 - half capacty is for data storage
 - fast read/write
 
+RAID 5  
+- Block level striping + distributed pairity
+- 3 disk min
+- Disk 1 block 1 = a
+- Disk 2 block 1 = b
+- Disk 3 block 1 = P1, where P1 = A XOR B
+- then rotate where pairity is stored amoung each disk
+
 ## Primary Memory Subsystems (Chpt 9)
 
 ### Register vs Cache
