@@ -2102,5 +2102,96 @@ FLASH is based off EEPROM
 
 ## Memory Management
 
+### Uni / Multi Program system
 
+Uni-program system  
+- only 1 process run at a time, no concurrency
+- mem split into 2 parts
+  - OS (monitor)
+  - current exexcuting program (user)
+- disadvantage
+  - I/O ops can be very slow
+  - inefficient
 
+Multi-Program System  
+- More than 1 program executing concorrently (need not be simultaneously)
+- "user" memory is subdivided and shared among active processes
+
+### Swapping / Partitioning
+
+CPU only execute from main mem  
+Main Mem limited  
+Solution: Fetch program to be executed to main mem thene xecute (SWAPPING)  
+
+Long-Term queue: process requests, typically stored on disk  
+Intermediate Queue, existing processes that have been temporarily kicked out of memory, typically stored on disk  
+Processes 'swapped' in as space becomes available
+
+As process completes, moved out of main mem  
+then check if any process in mem ready  
+if none ready, swap out blocked processes into intermediate queue  
+swap in ready process / new process
+
+Partitioning: splitting memory into sections to allocate processes (including OS)  
+Fixed Partition  
+Dynamic partition  
+
+Fixed  
+- Size fixed
+- Partitions may not be of equal size  
+- Process is fitted into partition that will take it, best fit
+- Disadvantage: some wasted mem  
+
+Dynamic  
+- Process placed into main mem w/ exact required mem allocated  
+- disadvantage: Nole at end of memory, too small to use(less waste than fixed since hole small and only have 1)  
+- when processes swapped out, process swapped in may be smaller than swapped out process creating another hole  
+
+When creating many holes in main meme, called external fragmentation  
+Solution:  
+- Coalesce: Join adjacent holes into one large space  
+- Compaction: Occasionally go through memory, move all holes to one free block
+
+### Paging
+
+used to overcome holes from partitioning  
+
+- Programs/processes divided into **EQUAL SIZED** small chunks called **Pages**  
+- Main memdivided into **EQUAL SIZED** small chunks called **Frames/Frame Pages**
+- Frame size = Page size  
+- OS maintaines list of free frames
+- only required number of pages are allocated to each processes  
+- Process does not require contiguous page frames, use **PAGE TABLE** to keep track of memories allocated  
+
+Relocation of codes  
+- No guarantee that process will load into same place in main mem during swap
+- Solution:  
+- **user** codes using **Logical Address** whilst **CPU** executes from the actual **Physical address**
+- Logical address (Virtual): a location relative to the beginning of program
+- Physical address: actual location in mem
+- Translator: Mem management unit of OS
+
+### Address Translation Scheme  
+Logic address = 2 part:  
+Page Number (P): used as index into a page table  
+Page offset (D): relative address within page, which can be combined with physical base address (Frame Number) to define the physical mem addr  
+
+Page num (n-m)  
+Page offset (m)
+
+Logical addr space $2^n$,  
+page size $2^m$  
+e.g. n = 16bit, m = 10bit, then each page contains 1024 items, totally 64 pages
+
+![mem-addr-translation](jacob-images/mem-addr-translation.png)
+
+given page size, 2Kb, 2048 = $2^{11}$  
+Phys addr = 64Kb  
+Logical addr = 128Kb
+
+number of frames = phys addr size / page size = 32 frames
+number of logical pages = logical addr space size / page size = 64 pages  
+
+number of bits to address physical = num bits to rep num frames + num bits to rep page size = num bits to rep 32 + num bits to rep 2048 = 5 + 11 bits
+
+number of bits to address logical = num bits to rep num logical pages + num bits to rep page size = num bits to rep 64 + num bits to rep 2048 = 6 + 11 bits
