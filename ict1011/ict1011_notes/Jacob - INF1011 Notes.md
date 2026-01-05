@@ -411,7 +411,7 @@ Role:
 
 CPU as a whole accesses Control, Data and Address busses
 
-## Register Section:  
+### Register Section:  
 Where all the registers are stored
 - Visible General user registers(User Programs can read or write to)
 - - Data registers: hold data temporarily during CPU operations
@@ -442,7 +442,7 @@ Subtraction: e.g.A-B=C
 - set if $(C_{Sign}=B_{Sign} \neq A_{Sign})$, e.i. A MSB = B MSB but both != C MSB
 - Why? Neg - Pos cannot be Pos OR Pos - Neg cannot be Neg
 
-## ALU Section:  
+### ALU Section:  
 
 performs arithmetic and logical ops specified by instruction.  
 ALU takes input from Internal bus, outputs to internal bus and Condition Code Register
@@ -461,7 +461,7 @@ Control unit tells alu what to do in each cycle
 
 Many operations will influence N,Z,V,C flags
 
-## Control Unit:
+### Control Unit:
 
 Roles:
 - Decodes instruction: decode opcode into internal and external control signals needed for execution  
@@ -469,7 +469,7 @@ Roles:
 - Controls movemeent of data between memory-register or internally between registers  
 - Handles external signals like interupt/reset
 
-## Control and sequnencing:
+### Control and sequnencing:
 
 Operations synchronised by master clock  
 CPU can be seen as a sequential state machine  
@@ -529,7 +529,7 @@ Execution flowchart (My interpretation):
 
 ![harvard-instruction-execution-flowchart](jacob-images/harvard-instruction-execution-flowchart.png)
 
-## Other architecture
+### Other architecture
 
 Harvard:  
 has 2 type of data bus.  
@@ -548,7 +548,7 @@ Harvard architecture not common since cost expensive and space expensive (more b
 
 still is useful in specific cases
 
-## Flynn's Taxonomy
+### Flynn's Taxonomy
 
 4 classifications based on:
 1. number ofconcurrent instruction (or control)  
@@ -588,7 +588,7 @@ RISC: Reduced Instruction Set Computer
 
 Now modern processors use hybrid model (CISC like model running ISC instructions)
 
-## Program Development process
+### Program Development process
 
 Program can be written on a completely different computer than the target system.  
 E.g. code in C, compile to Assembly, Link obj with library and data with linker, Download data to target machine, execute on target system  
@@ -2129,7 +2129,7 @@ Multi-Program System
 
 CPU only execute from main mem  
 Main Mem limited  
-Solution: Fetch program to be executed to main mem thene xecute (SWAPPING)  
+Solution: Fetch program to be executed to main mem then execute (SWAPPING)  
 
 Long-Term queue: process requests, typically stored on disk  
 Intermediate Queue, existing processes that have been temporarily kicked out of memory, typically stored on disk  
@@ -2152,7 +2152,7 @@ Fixed
 
 Dynamic  
 - Process placed into main mem w/ exact required mem allocated  
-- disadvantage: Nole at end of memory, too small to use(less waste than fixed since hole small and only have 1)  
+- disadvantage: Hole at end of memory, too small to use (less waste than fixed since hole small and only have 1)  
 - when processes swapped out, process swapped in may be smaller than swapped out process creating another hole  
 
 When creating many holes in main meme, called external fragmentation  
@@ -2165,7 +2165,7 @@ Solution:
 used to overcome holes from partitioning  
 
 - Programs/processes divided into **EQUAL SIZED** small chunks called **Pages**  
-- Main memdivided into **EQUAL SIZED** small chunks called **Frames/Frame Pages**
+- Main mem divided into **EQUAL SIZED** small chunks called **Frames/Frame Pages**
 - Frame size = Page size  
 - OS maintaines list of free frames
 - only required number of pages are allocated to each processes  
@@ -2184,7 +2184,7 @@ Logic address = 2 part:
 Page Number (P): used as index into a page table  
 Page offset (D): relative address within page, which can be combined with physical base address (Frame Number) to define the physical mem addr  
 
-Page num (n-m)  
+Page num (n minus m)  
 Page offset (m)
 
 Logical addr space $2^n$,  

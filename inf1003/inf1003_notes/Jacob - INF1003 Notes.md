@@ -110,7 +110,8 @@ $= \frac{100[1+100]}{2}$
 $= 5050$
 
 **Geometric Series Summation**  
-when n < ∞ : $$S_n = \frac{a(r^n-1)}{r-1}$$
+when n < ∞ :  
+$$S_n = \frac{a(r^n-1)}{r-1}$$
 
 when n approach ∞:
 $$lim_{n->∞},\ \ \ S_n = \frac{a}{r-1}$$
@@ -1449,24 +1450,24 @@ set.
 ∈: is element of, in  
 ∉ / $\cancel{∈}$: is not element of, is not in  
 {}: denote set, e.g. V = {a,e,i,o,u}  
-⊆: is a subset of
-⊈ / ¬(⊆) / $\cancel{⊆}$: is not a subset of
-⊂: is a proper subset of 
-⊄ / ¬(⊂) / $\cancel{⊂}$: is not a proper subset of
-=: equal sets
-≠ / $\cancel{=}$ / $\neq$: not equal sets
-𝒫(): power set
-$\times$: Cartesian Product (NOT matrix multiplication)
+⊆: is a subset of  
+⊈ / ¬(⊆) / $\cancel{⊆}$: is not a subset of  
+⊂: is a proper subset of  
+⊄ / ¬(⊂) / $\cancel{⊂}$: is not a proper subset of  
+=: equal sets  
+≠ / $\cancel{=}$ / $\neq$: not equal sets  
+𝒫(): power set  
+$\times$: Cartesian Product (NOT matrix multiplication)  
 ∪: Union of sets  
 ∩: Intersection of sets  
-$A^∁$: complement
+$A^∁$: complement  
 
 characterise all elements in set by stating the property / properties they must have to be members
 
 General form example:  
 *O* = {x|x is an odd positive integer lesss than 100}  
 $\equiv$  
-*O* = {x ∈ ℤ+ | x is add and x < 100}  
+*O* = {x ∈ ℤ+ | x is odd and x < 100}  
 
 another example  
 ℚ+ = {x ∈ ℝ | x = $\frac{p}{q}$ for some positive integers p and q}
