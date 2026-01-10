@@ -36,17 +36,17 @@ all stats will have margin of error
 For accuracy, should collect census of whole population but impractical/immpossible (may miss people who have left which turns the census into a sample; or maybe take too long)  
 so use sample, which is a smaller subset of population, which should be fair (in terms of reasonably similar distribution to the rest of the population and of a sufficent size to reflect overall trends in population) in order to infer for population
 
-Parameter - a summary number describing **POPULATION**
+Parameter - a summary number describing **POPULATION**  
 	$\mu$ / mu - mean  
     $\sigma^2$ / sigma squared - varience  
     $\sigma$ / sigma - standard deviation  
     $p$ - population
 
-Statistic - a summary number for a **SAMPLE**
-    $\bar{x}$ / x bar - mean
-    $s^2$ / s squared - varience
-    $s$ / s - standard deviation
-    $\hat{p}$ / p hat - proportion / sample
+Statistic - a summary number for a **SAMPLE**  
+    $\bar{x}$ / x bar - mean  
+    $s^2$ / s squared - varience  
+    $s$ / s - standard deviation  
+    $\hat{p}$ / p hat - proportion / sample  
 
 ### Types of data
 Qualitative data:
