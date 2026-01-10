@@ -1,4 +1,6 @@
-types of stats:  
+# Chap 1: Descriptive Statistics
+
+### types of stats:  
 Descriptive : needs collecting, Organizing, Summarizing, Presenting of Data, only deal with outcome from sample data  
 Inferential : Making inferences, Hypothesis testing, Making predictions, Determining relationships, given the outcome, infere for the popultion
 Probability Theory: Understanding the uncertainty of data, given the population and sample size, predict the probability of an outcome
@@ -31,27 +33,38 @@ Mean Margin of error is +- 9.9%
 all stats will have margin of error  
 
 
-For accuracy, should collect census of whole population but impractical/immpossible  
-so use sample, which is a subset of population, which should be fair in order to infer for population
+For accuracy, should collect census of whole population but impractical/immpossible (may miss people who have left which turns the census into a sample; or maybe take too long)  
+so use sample, which is a smaller subset of population, which should be fair (in terms of reasonably similar distribution to the rest of the population and of a sufficent size to reflect overall trends in population) in order to infer for population
 
-Parameter - a summary number describing population
+Parameter - a summary number describing **POPULATION**
+	$\mu$ / mu - mean  
+    $\sigma^2$ / sigma squared - varience  
+    $\sigma$ / sigma - standard deviation  
+    $p$ - population
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! to add on and fix !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Statistic - a summary number for a **SAMPLE**
+    $\bar{x}$ / x bar - mean
+    $s^2$ / s squared - varience
+    $s$ / s - standard deviation
+    $\hat{p}$ / p hat - proportion / sample
 
+### Types of data
 Qualitative data:
 describe characteristic / quality of variable
-scale of measurement is a set of catagories  
+scale of measurement is a set of catagories / split into various categories (even if they are numerical like zipcodes)  
+there is no "larger" or "smaller" to these values  
 e.g.  racial groups
 
 Quantitative data:
 numerical, differ in magnitude
 can be used in calculations
 scale for measurement has numerical values that represent different magnitudes of the variable  
+"larger / greater than" and "smaller / less than" are relevant and important
 e.g. height weight
 
 types of quatitative data:  
 Diesccrete (countable)  
-Continuous (non-countable) (infinite precision and total)  
+Continuous (non-countable) (possible infinite precision and total if the precision of the measuring instrument was not a limiting factor)  
 
 qualitative categorical data commonly presented as bar or pie chart
 
