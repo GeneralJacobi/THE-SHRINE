@@ -46,6 +46,9 @@ $$S_∞=\frac{a}{1-r},\ \ \ \ when |r|<1,$$
 $a$ is the first element in the sequence,  
 $r$ is the ratio
 
+$\displaystyle\sum_{k=1}^n k^2 = \frac{n(n+1)(2n+1)}{6}$  
+$\displaystyle\sum_{k=1}^n k^3 = \frac{n^2(n+1)^2}{4}$
+
 ## Recurrance relation
 
 find out next element based on previous element
@@ -169,8 +172,8 @@ not modulus where is absolute value |x|
 
 ## Key formulae
 
-$$a = d*q +r$$
-$$r = a \mod d$$
+$$a = d*q +r$$  
+$$r = a \mod d$$  
 
 if $a ≡ b \mod m$ and $c ≡ d \mod m$:  
 
@@ -182,6 +185,8 @@ given int $I$ and trying see if prime:
 largest number to check shld be $\sqrt{I}$
 
 $$LCM = \frac{a * b}{GCD}\ \ \ \ OR\ \ \ \ GCD = \frac{a * b}{LCM}$$
+
+$gcd(a,b) * lcm(a,b) = ab$
 
 ## Division
 
@@ -290,11 +295,11 @@ $a = p_1^{a1},p_2^{a2}, ... ,p_n^{an}$
 $b = p_1^{b1},p_2^{b2}, ... ,p_n^{bn}$  
 
 then, lcm(a,b) is given by  
-$gcd(a,b) = p_1^{max(a1,b1)},p_2^{max(a2,b2)}, ... ,p_n^{max(an,bn)}$  
+$lcm(a,b) = p_1^{max(a1,b1)},p_2^{max(a2,b2)}, ... ,p_n^{max(an,bn)}$  
 
 where $max(x,y)$ chooses the larger of $x$ and $y$
 
-$a,b$
+$a,b$  
 $gcd(a,b) * lcm(a,b) = ab$
 
 ## Euclidian Algorithm

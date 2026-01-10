@@ -551,7 +551,7 @@ still is useful in specific cases
 ## Flynn's Taxonomy
 
 4 classifications based on:
-1. number ofconcurrent instruction (or control)  
+1. number of concurrent instruction (or control)  
 2. data streams availale in the architecture
 
 **SISD**: Single instruction single data
@@ -2165,7 +2165,7 @@ Solution:
 used to overcome holes from partitioning  
 
 - Programs/processes divided into **EQUAL SIZED** small chunks called **Pages**  
-- Main memdivided into **EQUAL SIZED** small chunks called **Frames/Frame Pages**
+- Main mem divided into **EQUAL SIZED** small chunks called **Frames/Frame Pages**
 - Frame size = Page size  
 - OS maintaines list of free frames
 - only required number of pages are allocated to each processes  

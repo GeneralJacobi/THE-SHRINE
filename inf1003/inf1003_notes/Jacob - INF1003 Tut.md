@@ -125,11 +125,11 @@ or write out $a=qm+r$ into $r=a\mod{m}$
 
 ## Q2
 
-$a≡b\mod{m}$ means
-$a\mod{m} = b\mod{m}$
-$a=qm+r$
-q can be any integer. Thus a can be -42,-15,12,39 or onwards
-since have constraint $0\leq a\leq26$
+$a≡b\mod{m}$ means  
+$a\mod{m} = b\mod{m}$  
+$a=qm+r$  
+q can be any integer. Thus a can be -42,-15,12,39 or onwards  
+since have constraint $0\leq a\leq26$  
 
 ## Q3
 
