@@ -71,3 +71,16 @@ qualitative categorical data commonly presented as bar or pie chart
 quantitative data can be identified as frequencey distribution as well, shown in histogram
 
 large data set / quantitative continuous data, can use classes covering continnuous non-overlapping range of values to group data together
+
+Crosstabulation shows relationship between 2 variables, either can be qualitative/quantitative data  
+
+### Formulas
+
+mean = $\frac{ \displaystyle\sum_{i=0}^n {term}_i } {n}$  
+standard deviation = $\sqrt{\frac{\displaystyle\sum{} (each\_value\_from\_pop - pop\_mean)^2}{pop\_size}}$  
+varience = $\frac{\displaystyle\sum{} (each\_value\_from\_pop - pop\_mean)^2}{pop\_size - 1}$  
+InterQuartile Range (IQR) = $median\_of\_upper\_half - median\_of\_lower\_half$
+
+mean gouped = $\frac{ \displaystyle\sum_{i=0}^n {median of group}_i {frequency}_i } {n}$  
+
+coeffecient of variation = $\frac{standard deviation}{mean}$
