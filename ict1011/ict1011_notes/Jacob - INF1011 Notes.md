@@ -551,7 +551,7 @@ still is useful in specific cases
 ### Flynn's Taxonomy
 
 4 classifications based on:
-1. number ofconcurrent instruction (or control)  
+1. number of concurrent instruction (or control)  
 2. data streams availale in the architecture
 
 **SISD**: Single instruction single data

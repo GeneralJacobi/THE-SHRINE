@@ -1109,9 +1109,9 @@ available operations for WHERE:
   - =
   - <> / !=
   - <
-  - >
+  - \>
   - <=
-  - >=
+  - \>=
   - BETWEEN (between certain range)
   - LIKE (search for pattern)
   - IN
