@@ -216,6 +216,10 @@ Always consists of the below 3 things
 	- e.g.
 	- \<p> and \<h1> can both have same class and therefore same color
 	- \<img> may have same class as \<p> \<h1> but maynot have the color property
+- ID and Class allow application to multiple types of elements
+	- Class meant to apply to multiple elements (may be of varying types) in a single page 
+	- ID meant to apply to single element per page
+	- both can be used across pages
 - May have sub tags
 	- e.g.
 	- section h2{}
@@ -231,6 +235,8 @@ Always consists of the below 3 things
 - Value of property
 - datatype is dictated by the property
 	- e.g. color property can take string or hex (rgb color)
+- special tag !important will FORCE the value regardless of position in the cascade (e.g. in external but bootstrap has own value for this property)
+	- be careful when using
 
 ### Including CSS in HTML
 order of application
@@ -250,6 +256,10 @@ Generally avoid inline as have to scroll to specific element to edit
 - Write in .css file and include with \<link> tag
 - e.g. 
 	- \<link rel="stylesheet" href="css/main..css">
+- Since HTML reads top to bottom, take care to link the stylesheets in the correct order
+	- e.g.
+	- bootstrap first
+	- then own stylesheet
 
 #### Internal (aka Embedded)
 - Writing styles directly into html file with \<style> tag

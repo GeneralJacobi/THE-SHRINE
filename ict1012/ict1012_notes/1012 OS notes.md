@@ -715,6 +715,214 @@ xv6 vs Linux
 
 # Chap 2 System Calls & Traps
 
+## OS security
+- Confidentiality
+	- only users with the right privileges can access the data
+	- Data encryption
+	- Access Control
+- Integrity
+	- only users with the right privileges can modify data
+	- Data Validation
+	- Hash Checks
+- Accessibility
+	- Resources are available to users requiring them
+	- High Availability
+	- High Redundancy
+
+## xv6 System Calls
+
+### What is system call
+- is programming interface to services provided by OS
+- typically written in high level lang
+- syscalls invoked by triggering specific interruptions that the CPU Instruction Set Architecture (ISA) reserves for OS purposes
+- makes it convenient to call and use
+- syscalls mostly accessed by programs through API rather than direct call
+	- because API specifies set of functions that are available to programmer
+	- including params passed and expected return values
+	- handles the call and returns the values to the caller
+	- caller does not need to know anything about the call, just obey API requirements and understand what OS will do as result of call
+	- most details hidden from caller, managed by run-time support library
+	- API provides 
+		- abstraction of function call behaviors
+		- interoperability among diff OS/HW versions
+		- (usually) efficient access to System Calls
+		- (with the above) convenient simplified way to access
+	- examples of APIs
+		- Win32 API
+		- POSIX API
+			- UNIX, Linux, MACOS
+		- Java API
+
+RISC-V uses ecall with register a7 to invoke system calls
+
+Code / user mode:
+- Olden x86
+- int ISA call
+
+Asm / kernel mode:
+- ecall; go to interrupt table
+	- this results in some overhead
+- (x86)int 0x2E/0x80; read call from interrupt table
+- 
+- check register a7 for specific call
+- Arguments to call  placed in registers a0-a6
+- if even more arguments, place those in stack
+
+
+other syscalls:
+- X64
+- less overhead as no interrupt table, go direct to specific call
+	- RAX contains syscall number
+	- RCX, RDX, R8, R9, R10, R11 contains args
+	- (Windows) additional args go to stack
+	- (Linux) no additional arguments beyond these 6
+		- if really need, then one of the args would point to a buffer with the data
+
+### Syscall Param Passing
+
+3 general Methods:
+1. pass param in register (by value)
+2. pass param in buffer (by value)
+	- Param stored in block of mem
+	- address of block passed as param inregister
+3. Mixed, using mem block w/ registers
+
+### syscall Security
+- Hardware Security System calls can execute privilege ISA instructions
+- but how is it enforced?
+- what instructions should be privileged only and why
+	- btw sudo may give user priv mode but is not kernel mode, still stuck in user mode
+	- shutdown is priv
+		- why? as may interfere with task other users may be doing
+	- making mem executable
+		- certain areas should not be executable due to safety or running reasons
+		- may be used to exploit and get arbitrary remote code execution
+	- Interrupt Handling
+		- INT n: Software Interrupt
+		- some interrupts may require privilege depending on vector (????)
+		- IRET. IRETD (x64) sret/mret
+		- return from interrupt (RISC-V) (restore processor state)
+	- System Management
+		- RDPMC
+			- Read performance monitoring counters
+			- May require privilege depending on config
+	- Virtualisation
+		- VMRUN: Launch a virtual machine
+	- Access / modification to registers
+		- May compromise system integrity
+		- LGDT/SGDT (x86): Load/Store Global descriptor table register
+		- MOV CRx (CR0-4 in x64; sstatus, stvec, satp in RISC-V) : move val to control register
+	- Certain (Viirtual) Mem management
+		- LGDT/LIDT: Manipulate descriptor tables for mem management
+		- hfence\.vvma/ hfence\.gvma / sfence\.vma (RISC-V)
+
+
+### How does having a privileged mode of op benefit security
+
+by forbidding inst, prevent user-mode applications from
+- obtaining unauthorized access to critical resources
+- Disabling / interfering with essential system functions (interrupts/mem management)
+- Tamper kernel structures
+
+## How syscall security works
+
+When CPU executes instruction that goes through kernel mode
+automatically modify 2 bits in CS register indicate privilage mode in system
+(CPL for intel; CPU internal state priv RISC-V)
+set back to original val when return to user
+
+## What if no OS
+
+can write apps but must implement every user interface, device driver, mem handling, control flow it needs
+
+Cannot ensure multi process running simultaneously without interfering with each other
+no sccheduler
+
+## What is Privileged Mode Problem
+
+============= TO WRITE ====================
+Switching mode is a hardware instruction, dont want to do through registers, opens attack surface
+
+## xv6 - handling traps
+
+CPU may suspend normal instruction execution + transfer control to kernel mode in 3 situations (this is the Traps in xv6)
+1. system call: user prog executes ecall instruction to request service from kernel
+2. exception: instruction performs illegal action, e.g. accessing invalid virtual mem addr
+3. interrupt: hardware sigals that it needs attention, e.g. disk finished read/write
+Execution of user code should resume transparently after trap
+user should not be aware anything special has happened (especially for device interrupts)
+
+
+user can initiate syscall like write to file through API
+but somtimes is OS that initiate syscall
+
+- flow: 
+- === Usermode ===
+	- hardware declare interrupt or exception
+		- syscall uses ecall to inform that kernel user want to exec service
+		- exceptions raised y hardware
+- === Usermode ===
+- === Kernel Mode===
+	- os saves users process' registers into *trapframe*
+		- hardware sets sepc to current PC 
+			- (supervisor exception program counter)
+			- (special control = status register in RISC-V CPU)
+		- Disable interrupts, sstatus.SIE=0
+			- dont want to jump to other places incase have other interrupts simultaneously
+		- record cause, scause
+			- part of return capability
+		- jump to addr indicated by stvecc (uservec in trampoline)
+		- trampoline.S saves current user process' registers into trapframe + switch to kernel stack
+	- distinguishes event type and executes requested kernel service
+		- kernel exec trap.c
+		- trap.c distinguish between syscall, execption, interrupt
+		- exec requested kernel service
+	- restores saved registers from *trapframe*
+		- trampoline.S restores saved user process' registers
+		- kernel increments sepc to resume next user instruction
+		- exec sret (supervisor return) and CPU switches back to user mode
+- === Kernel Modse===
+- === Usermode ===
+	- resume user process
+
+## But like what is an exception
+## But like what is an interrupt
+## But like what is an syscall
+
+
+## What is kernel stack
+
+User stack is user space
+used when process run in user mode
+
+Kernel stack is kernel space
+used when process traps into kernel
+kernel stack is per-process; ever process has own kernel stack allocated in mem
+
+enter kernel stack from user stack when ecall, exception, interrupt (trap occurs)
+exit kernel stack to user space with sref (return from trap)
+
+## What does syscall.c do in system call hanndling
+- Syscall.c is dispatcher for system calls
+- defines dispatching table mapping system calls numbers to handler functions
+
+Read syscall number from reg a7 in trapframe
+use dispatch table to find corresponding handler
+Execute handler, place return val in a0 register for user program; if invalid, return -1
+
+## Why  handle traps like this
+
+- Security: 
+	- prevent user prog from directly handling privileged events (interrupts)
+- Isolation: 
+	- devices shared among processes; 
+	- only kernel coordinate access
+- Simplicity: 
+	- keep user programs focused on computation
+	- kernel manage resources
+- Consistency
+	- Ensure all traps handled in uniform way by kernel
+
 # Chap 3 Processes & Threads
 
 # Chap 4 CPU Scheduling  
