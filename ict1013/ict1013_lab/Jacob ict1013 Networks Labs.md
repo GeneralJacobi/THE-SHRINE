@@ -83,6 +83,10 @@ deduction: each port address is \[add port number to base ethernet address]
 
 What is the MAC address ffff.ffff.ffff used for?  
 What type of MAC address does 0180.c200.0000 belong to? What is it used for?
+local mac addresses
+belong to switch
+are multicast addresses for services
+this specific one is Spanning Tree Protocol
 
 List down the dynamically learned MAC addresses and the corresponding ports on SW1.  
 - 74d4.dd81.5c4b
@@ -115,3 +119,81 @@ Highlighted bytes corresponding to Type:
 represents that is ping request
 
 need for type field to determine protocol
+
+## Lab 3
+
+Router commands
+- show
+	- version - display os version
+	- running-config - display current running config
+	- ip interface brief
+- enable - enable mode
+- hostname - change hostname
+- no ip domain lookup - disable dns
+
+
+## Lab 4
+
+in enable mode
+- show interfaces
+	- trunk - show trunking interfaces and allowed vlans
+in config mode
+- vlan \[ID num] - create new vlan with id \[ID num]
+- name \[string] - name current vlan with \[string]; if last cmd was vlan 10, next name will name vlan 10
+- no vlan \[ID num] - removes vlan \[ID num] from vlan interface
+in interface config for specific port (e.g. g1/0/06 or range g1/0/11-24)
+- switchport 
+	- mode
+		- access - statically disables trunking on the port(s), default mode is dynamic trunk
+			- access vlan 10 - changes port(s) to only allow access to vlan 10; using no before this changes access vlan to default vlan (does not require vlan num)
+		- trunk - statically changes mode to trunk; default trunking mode is  auto
+			- trunk allow vlan - allows trunk to use vlan
+- no shut - changes interface status to up
+- switchport mode dynamic negotiate - switches port mode to dynamic trunk negotiate (default is auto)
+- switchport trunk - allows vlan access to trunk but  like how tho????
+
+note 
+- before removing vlan from database, recommended reassign all ports in that vlan
+- dynamic trunking protocol allows port to negotiate trunk mode, but it waits for others to initiate
+
+
+
+can pc a ping pc b - yes
+can pc a ping pc c - no
+can pc b ping pc c - no
+
+if no why
+because default gateway is 192.168.10.1, so cannnot ping 192.168.20.3
+diff subbnet
+
+what is default vlan
+vlan 1
+
+what ports assigned to default vlan
+g1/0/1-24   g1/1/1-4
+
+can pc a ping pc b after assigning pc a to vlan 10
+no lol
+diff vlan not allowed to send frames across
+
+which vlan is port 24 associated with after changing vlan
+vlan 20 faculty
+
+what is default name of lan 30? - vlan0030
+
+after 'no switchport access vlan' to g1/0/24, which vlan is g1/0/24 assigned to? - defualt vlan
+
+if delete vlan while port associated with it, port will not be associated with ANY vlan
+
+after trunk enable
+
+pc a to pc b - no
+pc a to pc c - no
+
+Why might you want to manually configure an interface to trunk mode instead of using DTP?
+
+Reflection  
+1. What is needed to allow hosts on VLAN 10 to communicate to hosts on VLAN 20?  
+	- 
+2. What are some primary benefits that an organization can receive through effective use of VLANs?
+	- 

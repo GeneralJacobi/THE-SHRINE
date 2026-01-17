@@ -136,9 +136,139 @@ Help cmds
 
 ## Topic 2 | Data Link Layer I : LAN, Ethernet and Switching Concepts
 
+switches learn mac addresses belong to which port ONLY when it recieves a frame
+multiple mac addresses can belong to one port
+when a mac address is not found from the table, the switch will broadcast to all ports to learn
+
 
 ## Topic 3 | Network Layer I : Internet Protocol and IPv4 Addressing
 
+Network layer provides layer and servicce
+- host-to-host (device to device / hop-to-hop)
+- source-to-destination (end device to end device)
+
+
+| Scalability | able to have world-wide-coverage                                                |
+| ----------- | ------------------------------------------------------------------------------- |
+| Performance | low overhead; as little unnecessasry delay as possible                          |
+| Robustness  | able to continue functioning despite isolated faults scatter throughout networs |
+| Cost        | as resource efficient as possible in order to be low cost                       |
+Desirable Criteria
+
+
+IP networks / datagram networks (same same)
+router not meant to connect to users, thats why only few ports
+
+Routers can expand using Pluggable Interface Modules (PIM) or Network Interface Module (NIM) 
+
+Routers connect to each other to create a WAN, "gluing" multiple LAN's
+
+Router will de-encapsulate to determine which link to send to
+
+IP network core functions
+- Addressing
+	- append IP addr as part of network header to ID src and dest
+- Routing
+	- determin next link to forward IP packet
+- Fragmentation and reassembly
+	- if ip packet size \> max transmission unit (MTU) of data link layer of next forward link
+		- fragment original packet into smaller fragments \< MTU
+		- send out
+	- net layer of dest responsible for reassembly back to original packet
+
+| IPv4   | IPv6 |
+| ------ | ---- |
+| 32 bit |      |
+IPv4 not compatible with IPv6
+but can run concurrently
+
+### IPv4 header
+Size: 20-60 byte
+
+VER - 4 bit
+- indicate IP version; IPv4 = 0100
+HLEN - 4 bit
+- indicate length of IPv4 header in multiples of 4
+- 20 byte = 5 x 4 = 0101
+Service - 8 bit
+- support differentiated service (RFC 2474)
+Total Length - 16 bit
+- max size = 2^16 = 65536 bytes
+Identification - 16 bit
+Flags - 3 bit
+Fragmentation offset - 13 bit
+Time to live - 8 bit
+- countdown to prevent packet being circulated forever
+- value decrement by 1 for each router
+- discard packet at 0
+Protocol - 8 bit
+- indicate type of data carried
+	- ICMP 0x01
+	- TCP 0x06
+	- UDP 0x11
+Header checksum - 16 bit
+Source IP
+Dest IP
+Options
+- rarely used
+- deprecated (RFC 6814)
+
+whois cmd to find ip address of URL
+
+| Class | type         | change                     | range                        |
+| ----- | ------------ | -------------------------- | ---------------------------- |
+| A     | Unicast      | 1st bit 0                  | 0.0.0.0 - 127.255.255.255    |
+| B     | Uni          | 1st bit 1. 2nd bit 0       | 128.0.0.0 - 191.255.255.255  |
+| C     | Uni          | 1st & 2nd bit 1, 3rd bit 0 | 192.0.0.0 - 223.255.255.255  |
+| D     | Multicast    | 1,2,3 bits 1, 4 bit 0      | 224.0..0.0 - 239.255.255.255 |
+| E     | Experimental | 1,2,3,4 bits 1             | 240.0.0.0 - 255.255.255.255  |
+classful addressing
+
+Network ID / Prefix
+Host ID / number
+
+Classless Inter-domain routing (CIDR)
+adopted in 1990
+introduce network mask 
+written as dotted notation 255.255.255.255 or slash notation /27
+original A,B,C class become public addr range
+private IP for private networks, require Network Address Translation to connect to outer world
+
+Special address blocks
+0.0.0.0/8 - reserve for indicating network // host
+- e.g. src addr for DHCP discover msg when host has no IP addr but needs one to send out IP packet
+127.0.0.0/8 - reserve for loopback addr within host
+- e.g. 127.0.0.1 commonly used to communicate with self
+169.254.0.0/16 - reserved for link-local addr for OS to assign to host when fails to obtain IP addr from DHCP server
+255.255.255.25/32 - reserve for limited broadcast addr within subnet
+
+#### Fixed Length Subnet Mask (FLSM)
+
+used to improve security
+divide host number into subnet number and host number
+network prefix + subnet number = extended network prefix
+
+host id of all 0 is network addr to ID network
+host id of all 1 is directed broadcast addr for that sub net
+
+note
+limited broadcast addr = send broadcast in same subnet
+directed broadcast add = send broadcast to given subnet
+
+
+#### Variable Length Subnet Mask (VLSM)
+
+allow 1 org to have subnets of different total host sizes in the same overall ip addr block
+
+e.g. 
+given block 116..113.0.0/16
+subnet 1 :
+- 166.113.0.0/20
+- subnet = \[]
+	- 0111 0100. 0111 0001 .  \[0000] 0000 . 0000 0000  -   0111 0100. 0111 0001 .  \[0000] 1111 . 1111 1111
+Subnet 2:
+- 166.113.0.0/21
+	- 0111 0100. 0111 0001 . \[1111 1] 000 . 0000 0000 -  0111 0100. 0111 0001 . \[1111 1] 000 . 0000 0000
 
 ## Topic 4 | Data Link Layer II / Network Layer II : Network Design I, VLAN and Inter-VLAN Routing
 
