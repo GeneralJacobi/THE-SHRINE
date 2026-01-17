@@ -227,10 +227,10 @@ OOP WK 7 OTHER DELIVERABLES:
 	- Must include DEMO for engine, not just raw engine
 - Presentation
 	- Presentation Slides to showcase exactly what the team has done  
-	- One short video to demonstrate all features and design of the system  
+	- 
 	- Innovation and functionalities
 - Video
-	- ?????
+	- One short video to demonstrate all features and design of the system
 - Peer eval
 	- Gey
 

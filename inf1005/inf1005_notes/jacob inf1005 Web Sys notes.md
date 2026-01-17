@@ -217,14 +217,30 @@ Always consists of the below 3 things
 	- \<p> and \<h1> can both have same class and therefore same color
 	- \<img> may have same class as \<p> \<h1> but maynot have the color property
 - ID and Class allow application to multiple types of elements
-	- Class meant to apply to multiple elements (may be of varying types) in a single page 
-	- ID meant to apply to single element per page
+	- Class meant to apply to multiple elements (may be of varying types) regardless of position in document tree
+	- ID meant to apply to single element regardless of position in docuent tree
 	- both can be used across pages
 - May have sub tags
 	- e.g.
 	- section h2{}
 	- h2 is the sub selector
 	- this means all h2 tags within the section tags
+- Attribute Selector
+	- select HTML elements by presence of element attribute / value of attribute
+	- e.g. style hyperlinks
+	- can combine with ID and class selector
+	- uses square brackets
+- Pseudo element selector
+
+|             | Matcher                                                                                                          | Example                                                                                                                          |
+| ----------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| []          | a Specific attribute                                                                                             | [title] Matches any element with a tiltle attribute                                                                              |
+| [=]         | a specific attribute with a specific value                                                                       | a[title="posts from this country"]  <br>Matches any \<a> element whose title attribute is exactly “posts from  <br>this country” |
+| [~=]        | A specific attribute whose value  <br>matches at least one of the words in a  <br>space-delimited list of words. | \[title~="Countries"]  <br>Matches any title attribute that contains the word “Countries“                                        |
+| \[^=]  <br> | A specific attribute whose value begins  <br>with a specified value.  <br>a\[href^="mailto"]                     | Matches any \<a> element whose href attribute begins with “mailto“                                                               |
+| \[*=]       | A specific attribute whose value  <br>contains a substring.                                                      | img\[src*="flag"]<br>Matches any \<img> element whose src attribute contains somewhere  <br>within it the text “flag             |
+| \[$=]       | A specific attribute whose value ends  <br>with a specified value                                                | a\[href$=".pdf"]  <br>Matches any <a> element whose href attribute ends with the text “.pdf“                                     |
+
 #### Property
 - Changes the property/characteristic of the selected element
 	- e.g.
