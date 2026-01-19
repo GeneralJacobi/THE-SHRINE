@@ -168,23 +168,6 @@ Project split into:
 - (no  shortcuts to develop the components, e.g. no libraries).
 - box2d extension allowed (wk2 lecture she say one)
 
-
-SOLID BIRD BIRD
-- The Single Responsibility Principle  
-	- A class should only have one job / reason to change
-	- e.g a report class that generates, formats and prints a report does not follow this principle
-	- shld have Report class, ReportGenerator class, ReportFormatter, Report Printer
-	- This way if anythign changes only one class is changed
-- The Open-Closed Principle  
-	- Open for extension, Closed for modification
-	- PaymentService Class (Closed)
-	- UPIPayment, CardPayment, Wallet Payment
-	- each extends from payment service but is different based on exactly how they pay
-- The Liskov Substitution Principle  
-- The Interface Segregation Principle  
-- The Dependency Inversion Principle
-
-
 Problem Statement Wk1-7: Develop an abstract engine
 
 PROJECT REQUIERMENTS:  
@@ -249,7 +232,22 @@ list.remove(0) will automatically shift all indexes down
 0 here is the index
 
 
-#### Encapsulation
+### SOLID BIRD BIRD
+- The Single Responsibility Principle  
+	- A class should only have one job / reason to change
+	- e.g a report class that generates, formats and prints a report does not follow this principle
+	- shld have Report class, ReportGenerator class, ReportFormatter, Report Printer
+	- This way if anythign changes only one class is changed
+- The Open-Closed Principle  
+	- Open for extension, Closed for modification
+	- PaymentService Class (Closed)
+	- UPIPayment, CardPayment, Wallet Payment
+	- each extends from payment service but is different based on exactly how they pay
+- The Liskov Substitution Principle  
+- The Interface Segregation Principle  
+- The Dependency Inversion Principle
+
+### Encapsulation
 Hide mess
 - Class:
 	- Public variables & methods
@@ -273,3 +271,33 @@ UML diagrams
 SOLID principles helps you write code that doesnt explode when you add new features
 
 
+## Wk 3
+
+### Inheritance
+
+Parent Class's variables are copied to child class (not by values, just same name)
+Child class can access Parent Class's variables if that already have a value
+Child class's variables only exist within child class and parent cannot access.
+
+Proper encapsulation should include validation in getter setter functions
+
+### Polymorphism
+The capability of a single method to operate on different types of objects
+
+Allows same method name to behave differently based on object it is acting upon
+
+e.g.
+one area() function in parent class
+but it reads what the this.type of the instance object is, then uses the correct formula to return correct value
+
+overloading is also called compile time polymorphism because when compile function, programmer knows there are 2 funcs with diff arguments
+
+#### Overloading
+a func with multiple definitions based on arguments in a single class
+
+#### Overriding
+a func in child class has the same name as a func from parent class
+it also takes the exacct same arguments as the parent class's func
+calling this func from the child class will use the child class implementation, overridng the parent class implementation
+
+## Wk 4

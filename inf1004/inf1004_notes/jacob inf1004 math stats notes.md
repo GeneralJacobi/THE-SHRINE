@@ -384,6 +384,7 @@ Mutually Exclusive;
 
 ### Formula
 P(A|B) = $\frac{P(A∩B)}{P(B)}$
+P(B|A) = $\frac{P(A∩B)}{P(A)}$
 
 P(A|B) read as P(A) given B occurred
 
@@ -433,3 +434,38 @@ $P(A_1∩A_2∩A_3∩...∩A_n) = P(A_1)P(A_3)P(A_2)...P(A_n)$
 
 Tree diagram helpful when time / order is involved
 Write probability of individual event on each branch
+
+
+## Bayes Theorem
+
+exhaustive events: P(A∪B) = P(S) = 1
+is any number of events covers all possible outcomes, the set of all participating events is considered exhaustive (the union of this set of events is exhaustive)
+
+### Law of total probability
+
+Given a set of ***mutually exclusive and exhaustive events ($S_1...S_k$)**,* probability of event A (P(A)) can now be expressed using the law of total probability
+
+P(A) = P(A∩$S_1$) + P(A∩$S_2$) + ... + P(A∩$S_k$)
+
+rewrite with multiplicative rule
+P(A) = P(A|$S_1$)P($S_1$) + P(A|$S_2$)P($S_2$) + ... + P(A|$S_k$)P($S_k$)
+
+
+### Back to Bayes-ics theorem
+Using conditional probability equations, 
+P(A|B) = $\frac{P(A∩B)}{P(B)}$
+P(B|A) = $\frac{P(A∩B)}{P(A)}$
+Bayes combines the 2 into P(B|A) = $\frac{P(A|B)P(B)}{P(A)}$
+
+Which then he rewrite denominator using law of total probability,
+set of mutually exclusive exhaustive events are B and B\`
+P(B|A) = $\frac{P(A|B)P(B)}{P(A|B)P(B) + P(A|B^`)P(B^`)}$
+
+Bayes theorem useful when data given only has 1 specific event first as well as the probability of that event e.g. always A first then B, P(A) given
+
+
+# Chap 3
+
+Random variable:
+- Denoted with capitol letter
+- Possible values are numerical outcomes of a random phenomenon
