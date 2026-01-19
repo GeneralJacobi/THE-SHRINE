@@ -125,11 +125,11 @@ or write out $a=qm+r$ into $r=a\mod{m}$
 
 ## Q2
 
-$a≡b\mod{m}$ means
-$a\mod{m} = b\mod{m}$
-$a=qm+r$
-q can be any integer. Thus a can be -42,-15,12,39 or onwards
-since have constraint $0\leq a\leq26$
+$a≡b\mod{m}$ means  
+$a\mod{m} = b\mod{m}$  
+$a=qm+r$  
+q can be any integer. Thus a can be -42,-15,12,39 or onwards  
+since have constraint $0\leq a\leq26$  
 
 ## Q3
 
@@ -1334,3 +1334,346 @@ Therefore can only conclude that A = B
 = 343 - (120 + 135 + 80 - 50 -30 - 25 + 15)  
 = 343 - 245  
 = 98
+
+
+# Tutorial 9
+
+## q1
+
+$f_1(x) = x^2 + 1$  
+$f_2(x) = (x + 2)^2$
+
+a:  correct  
+$(f_1 + f_2)(x) = f_1(x) + f_2(x)$  
+$= x^2 + 1 + (x + 2)^2$  
+$= x^2 + 1 + x^2 + 4x + 4$
+$= 2x^2 + 4x + 5$
+
+b:  
+$(f_1f_2)(x) = f_1(x)f_2(x)$  
+$= (x^2 + 1)(x + 2)^2$  
+$= (x^2 + 1)(x^2 + 4x + 4)$
+$= x^4 + 4x^3 + 5x^2 ++4x +4$
+
+c:  
+$f_1 \circ f_2 = f_1(f_2(x))$
+$= x^4 +8x^3 +2x^2 +32x +17$
+d:  
+$f_2 \circ f_1 = f_2(f_1(x))$  
+$= x^4 + 6x^2 +9$
+
+## q2
+
+a: correct  
+∀a∀b{(f(a)=f(b)) → (a = b)}  
+∀b∃a{b = f(a)}  
+
+is bijective
+
+b: correct  
+is not one-to-one as f(a) and f(b) have same image  
+is not onto as alement 'a' has no preimage
+
+c: correct  
+is not one-to-one as f(a), f(c) and f(d) have same image  
+is not onto as elements 'a' and 'c' have no preimage
+
+## q3
+
+a: correct  
+f(n) = $\pm$ n is not a function as it maps one element to 2 images, +n and -n
+
+b:  
+$f(n) = +\sqrt{n^2 - 1}$ is not a function.  
+consider n = 1, $f(n) = +\sqrt{1^2 - 1} = +\sqrt{0}$  **this is wrong lol**  
+which is not in domain
+
+consider n = 0, $f(n) = +\sqrt{0^2 - 1}$  
+which is not in codomain
+
+c: correct  
+$f(n) = \frac{1}{n^2-4}$ is not a function  
+consider $f(2) = \frac{1}{2^2-4} = \frac{1}{0}$  
+which is not invalid
+
+## q4
+
+a:  
+1: assumptions:  
+there is a SIT student who does not have a Poly diploma  
+there is an SIT student who has more than one poly diploma
+
+2: assumption:  
+each SIT student has a distinct Poly diploma AND there is at least one student for each possible category of Poly diploma
+
+b:  
+
+1: assumptions:  
+is not 
+
+2: is injective as no two students are supposed to have the same Student ID number
+
+3: assumptions:  
+set of strings is a set that ONLY includes valid Student ID NNumbers of SIT students
+
+c:  
+
+1: 
+assumption:  
+mother of SIT student is not a female citizen or resident in Singapore (perhaps foreigner) AND has a first name different from any femal citizen or resident in SG
+
+2: 
+assumption:  
+mother of each SIT student has a unique name incuded in codomain  
+
+3: 
+assumption:  
+fvery unlikely  
+but each name in codomain is the first name of the mother of an SIT student
+
+
+## q5
+
+a:  
+
+$f(n) = n-1$
+for any m ∈ Z and n ∈ Z,  
+f(m) = f(n) → (m-1) = (n-1) → m = n  
+is one-to-one
+
+for any m ∈ Z, there is a (m+1) ∈ Z such that f(m+1) = (m+1)-1 = m
+is onto  
+
+b:  
+
+$f(n) = n^2 + 1$
+
+COUNTER EXAMPLE:  
+f(1) = f(-1) = 2  
+is NOT one-to-one
+
+COUNTER EXAMPLE:  
+there is no n ∈ Z such that f(n) = $n^2 + 1$ = 3
+is NOT onto
+
+c:  
+
+$f(n) = n^3$
+
+for any m ∈ Z and n ∈ Z,  
+f(m) = f(n) → (m^3) = (n^3) → m = n  
+is one-to-one
+
+COUNTER EXAMPLE:  
+there is no n ∈ Z such that f(n) = $n^3$ = 2
+is NOT onto
+
+d:  
+
+$f(n) = \lceil \frac{n}{2} \rceil$
+
+COUNTER EXAMPLE:  
+f(1) = f(2) = 1  
+is NOT one-to-one
+
+for any m ∈ Z, there is a (2m) ∈ Z such that f(2m) = $\lceil \frac{2m}{2} \rceil$ = m  
+OR for any m ∈ Z, there is a (2m-1) ∈ Z such that f(2m-1) = $\lceil \frac{2m-1}{2} \rceil$ = m  
+is onto
+
+e:  
+
+for any m ∈ Z and n ∈ Z,  
+$f(m) = f(n) → \lfloor m \rfloor = \lfloor n \rfloor → m = n$  
+is one-to-one
+
+for any m ∈ Z, there is a m ∈ Z such that f(m) = $\lfloor m \rfloor$ = m  
+is onto
+
+## q6
+
+a:  
+
+for any x ∈ R and y ∈ R, f(x) = f(y) → 2x+1 = 2y+1 → x = y  
+is one-to-one
+
+for any x ∈ R, there is $\frac{x-1}{2} ∈ R$ such that f($\frac{x-1}{2}$) = 2($\frac{x-1}{2}$)+1 = x
+
+is bijective
+
+b:  
+
+f(x) = $x^2+1$
+
+counter example:  
+f(1) = f(-1) = 2  
+is not one-to-one
+
+so is not bijecctive
+
+c:  
+
+f(x) = $x^3$
+
+for any x ∈ R and y ∈ R, f(x) = f(y) → $x^3 = y^3$ → x = y  
+is one-to-one
+
+for any x ∈ R, there is $\sqrt[3]{x} ∈ R$ such that f($\sqrt[3]{x}$) = $(\sqrt[3]{x})^3$ = x
+
+is bijective
+
+d:  
+
+f(x) = $(x^2 +1)/(x^2+2)$
+
+counter example:
+f(1) = f(-1) =
+
+is not bijective
+
+## q7
+
+a:  
+
+steps:
+1. f is injective (assume p)
+2. f $\circ$ g is injective (assume p)
+3. g is NOT injective (assume ¬q)
+4. ∃x,y ∈ A ((g(x) = g(y)) ∧ x $\neq$ y) (by 3)
+5. ∃x,y ∈ A ((f $\circ$ g(x) = f $\circ$ g(y)) ∧ x $\neq$ y) (By 1 and 4)
+6. ∀x,y ∈ A ((f $\circ$ g(x) = f $\circ$ g(y)) ∧ x = y) (By 2)
+7. g is injective (Contradiction 5 and 6)
+
+
+b:  
+
+if f is not injective, then there are 2 elements in B mapped to the same element in c  
+BUT these 2 elements in b is not necessarily in the range of g(A),  
+hence, g is in jective can still hold
+
+since g(x) is unique for every elemtn in A, f(g(x)) is one-to-one  
+however, f(x) may not be one-to-one as there may be elements in B that have no preimage in A for g(x) but have an image in C under f(x)  
+there is no way to tell if f(x) by itself is one-to-one
+
+steps: 
+1. 
+2. 
+3. 
+4. 
+5. 
+6. 
+7. 
+
+
+
+# Tutorial 10
+
+q1  
+a  
+|R|a|b|c|d|
+|-|-|-|-|-|
+|a|1|0|1|0|
+|b|1|1|0|1|
+|c|1|1|1|0|
+|d|1|1|0|1|
+
+is reflexive, elements on diaganol of matrix all 1  
+is reflexive, each element in directed graph has self-loop
+
+is not symmetric as for every i, there may not be a j such that $M_{ij}$ implies $M_{ji}$
+is not symmetric as there are single arrows in directed graph
+
+is not anti symmetric as there are double arrows in directed graph  
+is not anti symmetric as
+
+is not transitive as there is no arrow between some element and any neighbouring element two step away b->a->c does not have a shortcut
+
+q2  
+not reflexive, element 1 and 34 do not have self-loop 
+not refflexive, R(1) does not imply (1,1)  
+
+not symmetric, single arrow from 2 to 4
+not symmetric as (2,4) in R but (4,2) not in R
+
+not anti symmetric, double arroww between 3 and 2  
+not anti symmetric, (2,3) and (3,2) in R
+
+is transitive,  
+all journeys of 2 step: 2->3->4 , 3->2->4  
+(2,3), (3,4) has (2,4)  
+(3,2), (2,4) has (3,4)  
+
+
+q3  
+a  
+is reflexive, each element has self loop  
+is symmetric, no single arrows in graph  
+is not antisymmetric, there are double arows in graph
+is not transitive, 2step journeys: c->a->d, d->a->c, neither have 1 step shortcut.
+
+b  
+not reflex, some elements do not have self loop
+not symmetric, there are single arrows in the graph
+not anti symmetric, there are double arrows in graph  
+not transitive, 2step jouneys:
+
+c  
+not reflexive, some elements do not have self loop
+not symmetric, there are single arrows in the graph
+not anti symmetric, there are double arrows in graph  
+not transitive, 2step journeys  
+
+q4:  
+a  is not transitivve, a and b take module, b and c take another module, a and c may not take any odule together  
+thus is not equivanelence  
+
+b  
+is reflexive, any student study with themselves in same program
+is symmetric, a and b study in same program, b and a study in same program
+is transitive, if a dn b study in same program and b and c study in same program, then a and c study in same program
+thus is equivalence  
+equivalence cllasses, sit student(s) in each SIT program
+
+c  
+is not symmetric as gpa a $\geq$ gpa b does not imply gpa b $\geq$ gpa a  
+thus is not equivalence
+
+d  
+is not transitive, if GPA a = 3.0, GPA b = 3.5, GPA c = 4.0, (a,b) and (b,c) in R, but (a,c) not in R  
+thus is not equivalence  
+
+e  
+is reflexive, any student taking same num credits as self  
+is symmetric, a and b taking same num of credits, b and a taking same num of credits  
+is transitiive, a = b, b = c, a = c  
+thus is equivalence,  
+equivalence classes: SIT students taking same number of credits
+
+q5  
+a: is reflexive, any string has same number of letters as itself  
+b: is symmetric, if a and b same length, b and a same lengh  
+c: is transitive, if a and b same length, and b and c same length, then a and c same length  
+d: is euivalence, classes: strings of English letters that are of specific length  
+
+q6  
+R = {a/b | a divides b} defined on set of $Z^+$  
+not symmetric, for example, (1,2) in R, but (2,1) not in R  
+thus is not equivalence  
+
+q7  
+a  
+(8,2) not in R  
+(1,4) in R  
+(5,-3) not in R  
+(3,2) in R  
+
+b  
+(6,5), (8,5), (10,5), (12,5), (14,5)  
+
+c  
+n is even, n = 2k for some integer k  (assume p)  
+n - 3 = 2k - 3 = 2(k-2) + 1 is odd  
+therefore, (n,3) in R for all n is even integer
+
+d  
+r is not reflexive, any integer a, (a,a) = a-a = 0, thus (a,a) not in R  
+thus not equivalence

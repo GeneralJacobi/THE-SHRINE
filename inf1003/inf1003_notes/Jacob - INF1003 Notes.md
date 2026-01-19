@@ -46,6 +46,9 @@ $$S_∞=\frac{a}{1-r},\ \ \ \ when |r|<1,$$
 $a$ is the first element in the sequence,  
 $r$ is the ratio
 
+$\displaystyle\sum_{k=1}^n k^2 = \frac{n(n+1)(2n+1)}{6}$  
+$\displaystyle\sum_{k=1}^n k^3 = \frac{n^2(n+1)^2}{4}$
+
 ## Recurrance relation
 
 find out next element based on previous element
@@ -110,7 +113,8 @@ $= \frac{100[1+100]}{2}$
 $= 5050$
 
 **Geometric Series Summation**  
-when n < ∞ : $$S_n = \frac{a(r^n-1)}{r-1}$$
+when n < ∞ :  
+$$S_n = \frac{a(r^n-1)}{r-1}$$
 
 when n approach ∞:
 $$lim_{n->∞},\ \ \ S_n = \frac{a}{r-1}$$
@@ -169,8 +173,8 @@ not modulus where is absolute value |x|
 
 ## Key formulae
 
-$$a = d*q +r$$
-$$r = a \mod d$$
+$$a = d*q +r$$  
+$$r = a \mod d$$  
 
 if $a ≡ b \mod m$ and $c ≡ d \mod m$:  
 
@@ -182,6 +186,8 @@ given int $I$ and trying see if prime:
 largest number to check shld be $\sqrt{I}$
 
 $$LCM = \frac{a * b}{GCD}\ \ \ \ OR\ \ \ \ GCD = \frac{a * b}{LCM}$$
+
+$gcd(a,b) * lcm(a,b) = ab$
 
 ## Division
 
@@ -290,11 +296,11 @@ $a = p_1^{a1},p_2^{a2}, ... ,p_n^{an}$
 $b = p_1^{b1},p_2^{b2}, ... ,p_n^{bn}$  
 
 then, lcm(a,b) is given by  
-$gcd(a,b) = p_1^{max(a1,b1)},p_2^{max(a2,b2)}, ... ,p_n^{max(an,bn)}$  
+$lcm(a,b) = p_1^{max(a1,b1)},p_2^{max(a2,b2)}, ... ,p_n^{max(an,bn)}$  
 
 where $max(x,y)$ chooses the larger of $x$ and $y$
 
-$a,b$
+$a,b$  
 $gcd(a,b) * lcm(a,b) = ab$
 
 ## Euclidian Algorithm
@@ -1449,24 +1455,24 @@ set.
 ∈: is element of, in  
 ∉ / $\cancel{∈}$: is not element of, is not in  
 {}: denote set, e.g. V = {a,e,i,o,u}  
-⊆: is a subset of
-⊈ / ¬(⊆) / $\cancel{⊆}$: is not a subset of
-⊂: is a proper subset of 
-⊄ / ¬(⊂) / $\cancel{⊂}$: is not a proper subset of
-=: equal sets
-≠ / $\cancel{=}$ / $\neq$: not equal sets
-𝒫(): power set
-$\times$: Cartesian Product (NOT matrix multiplication)
+⊆: is a subset of  
+⊈ / ¬(⊆) / $\cancel{⊆}$: is not a subset of  
+⊂: is a proper subset of  
+⊄ / ¬(⊂) / $\cancel{⊂}$: is not a proper subset of  
+=: equal sets  
+≠ / $\cancel{=}$ / $\neq$: not equal sets  
+𝒫(): power set  
+$\times$: Cartesian Product (NOT matrix multiplication)  
 ∪: Union of sets  
 ∩: Intersection of sets  
-$A^∁$: complement
+$A^∁$: complement  
 
 characterise all elements in set by stating the property / properties they must have to be members
 
 General form example:  
 *O* = {x|x is an odd positive integer lesss than 100}  
 $\equiv$  
-*O* = {x ∈ ℤ+ | x is add and x < 100}  
+*O* = {x ∈ ℤ+ | x is odd and x < 100}  
 
 another example  
 ℚ+ = {x ∈ ℝ | x = $\frac{p}{q}$ for some positive integers p and q}
@@ -2152,3 +2158,8 @@ set: set of people
 (Bob, Carol) = Bob is taller than Carol  
 
 therefore, (Alice, Carol) can be concluded
+
+to disprove,  
+steps:  
+find all journeys of 2 step  
+find journey that does not have one step shortcut
