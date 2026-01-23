@@ -311,3 +311,96 @@ Generally avoid inline as have to scroll to specific element to edit
 - should be replicated on all pages
 
 ### Misc. Bootstrap Features
+
+
+# Chap 3 JavaScript
+
+## Intro to JS
+
+### History
+
+Servers used many languages
+- ASP
+- PHP
+- PERL
+all serverside, needed send post req to use
+
+Made demand for client side script, running on browser
+
+attempts:
+- java applets
+	- not good due to lack of control over access to machine
+- active X
+- plugins
+
+want somethin 
+- interpreted
+- fast
+
+Brenden Eich - worked at netscape later founded mozilla
+wrote the basics of javascript
+Sun Oracle, owner off Java name, suggested naming it Javascript, as it was a "we-hate-microsoft" together phase
+so its not really related to Java, more related from C
+
+IEEE has a specific name for Javascript as it is official but everyone calls is js lol
+
+wont talk much about XML or JSON in the course but can use in project if you want
+
+Java using var for all variables makes it prone to error if you dont handle the type of your variables well
+
+Does not cascade / overwrite like css when having same function / variable name
+
+Script tag does not have to be in header like style tag
+Can be put at bottom of body, ensures script is only loaded when whole page is loaded
+Location in code does matter since loading still loads from the top down
+
+Now can just use defer tag in the script tag, rather than having to place it 
+
+Or have a onload code in js to only add listeners when page fully loaded
+
+or async, which implies your JS is all functions that do not require any information from the page and can be loaded before page is fully loaded
+### Event Handling
+
+Inline js is not secure, pls dont use
+
+need to initialize listeners on load
+make init function and add listeners for different things like banner or each caption
+
+
+### Debugging
+
+Use breakpoints
+
+alt is like alt name for this specific tag, its like ID
+
+### Advantages & Disadvantages of Client-side scripting
+Advantages
+- processing offload to client, reduce load on server
+- browser responds rapidly to user events; improve user experience
+- JS interact with HTML in a way that server cannot
+
+Disadvantages:
+- Client can disable to code, or admins can turn off js with policy
+	- Means functionality req redundancy on server
+- JS heavy web apps are complicated; hard to maintain
+- Not fault tolerant
+	- Will cease execution on invalid line
+- Java script constantly being worked on, newer features may not be supported on all browsers
+
+## Document Object Model (DOM)
+
+Each tag is an element and becomes and object when the page is loaded
+
+open using F12 inspect, elements tab
+
+## JavaScript Libraries & frameworks
+
+- Bootstrap JS
+- jQuery
+- Ajax
+	- out of fashion, FetchAPI (2015) gaining popularity
+- JSON
+- Typescript
+
+
+## TypeScript
