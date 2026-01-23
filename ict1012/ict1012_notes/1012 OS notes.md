@@ -925,6 +925,214 @@ Execute handler, place return val in a0 register for user program; if invalid, r
 
 # Chap 3 Processes & Threads
 
+### What is a process
+A program in a piece of memory being executed and the services needed to execute it
+A program in execution; process execcution must prograss in a sequential fashion
+
+batch system - jobs
+- time-shared systems - user programs or tasks
+
+Program is a passive entity stored on disk (executable file)
+Process is active
+- Program becomes process when executable file loaded into mem
+
+Execution can be done in many ways
+- CLI
+- mouse double click
+
+### What is process state
+
+Scheduler determines the next state
+
+- states
+	- new: process is being created
+	- running: process being executed
+	- waiting: process waiting for some event to occur
+	- ready: process waiting to be assigned to a processor
+	- terminated: process has finished execution
+
+![[process_states.png]]
+
+### Process control block
+
+info associated with each process (task control block)
+- Process state
+	- To check state of process and its child processes
+- Process Identifier
+- Program counter
+- CPU registers
+- CPU scheduling info
+	- Priorities, scheduling queue pointers
+- Mem-management info
+	- mem allocated to process
+- Accounting info
+	- CPU used
+	- clock time elapsed since start
+	- time limits
+- I/O status info
+	- I/O devices allocated to process
+	- list of open files
+- Inter-process communication
+
+### Process Memory
+- Stack
+	- Temp data like
+	- function param
+	- return addr
+	- local variables
+- heap
+	- dynamically alloc-ed mem during rutime
+	- managed via calls like malloc and free
+- data section
+	- global & static variables which are allocated and initialised prior to exec
+- text section
+	- compiled program code (from non-volatile storage) when launched (other sections (.init, .rodata))
+- BSS (Block Stated by Symbol)
+	- similar to Data sect, uninitialized global and static variables 
+
+when processes are stored and restored, this additional info must be store and restored together
+like PC and program registers
+
+Note stack grow down in addr num, heap grow up in addr num
+if meet, stack overflow / cannot malloc/new, insufficent mem
+
+### Why schedule? just run lol
+
+Processes can be described as
+- I/O bound
+	- spend more time doing I/O than computation, many short cpu burst
+- CPU-bound
+	- spend more time doing computation; few long CPU bursts
+
+- Long term scheduler
+	- aka job scheduler
+	- selects which processes shld be brought into ready queue
+	- invoked infrequently (seconds / minutes); ay be slow
+	- controls degree of multi-programming
+	- strives for good process mix
+- short-term scheduler
+	- CPU scheduler
+	- selects which process shld be executed next and allocates CPU
+	- invoked very frequently (milliseconds); must be fast
+
+Need schedule to maximuse CPU usage
+share time
+deliver acceptable response time
+
+swapping PCB between processes is considered overhead and that cpu time is considered lost
+
+### How is process queue
+
+3 queues
+- Job 
+	- set of all system tasks
+- Ready
+	- set of all processes residing in main mem, ready and waiting to exec
+- Device
+	- set of all processes waiting for i/o device
+Processes can migrate among various queues
+
+### Processes in xv6
+
+each process represented by struct proc in proc.h
+
+key fields 
+- state
+	- states:
+		- Unused
+			- process slot in process table (proc\[]) is free, process not in use
+		- Used
+			- process slot allocated, process created but not yet runnable
+		- Sleeping
+			- process waiting for an event or condition
+		- Runnable
+			- process ready to run
+			- waiting for CPU
+		- Running
+			- process currently executing on cpu
+		- Zombie
+			- process terminated
+			- waiting for parent to collect exit status
+- pid
+- parent
+	- pointer to parent process
+- kstack
+	- kernel stack for handling traps and system calls
+- pgdir
+	- page directory (address space mapping)
+- trapframe
+	- saved registers during system calls / traps
+- context
+	- CPU context for switching back
+
+
+### Syscalls that manage processes
+
+fork()
+- creates new child processes by copying the parent process 
+- child has copy of parent mem
+- child has copy of parent register state
+- copies file descriptors that the parent opened, so child has own pointers to those open files
+- child is made in same working directory
+	- with all these copies, the child effectively starts executing immediately after the fork() method, as if fork ha just returned a value
+- After fork
+- parent and child execute independently
+- child process gets a 0 returned from fork
+- parent process gets the child PID returned from fork
+- if fork fails, -1 is returned to the parent
+
+exit(status)
+- terminates calling process
+- i.e.
+- releases user mem
+- all opend file descriptors are closed
+- process becomes a zombie until parent calls wait()
+- integer status is saved so parent can retrieve via wait
+
+wait(&status)
+- suspend execution of calling process until one of its child processes exits
+- if child already exit, wait immediately returns
+- return value is pid of the exited child
+- if status is non-null, child's exit status is stored at mem addr
+- if calling proc has no children, return -1
+
+kill(pid)
+- requests termination of process with pid
+- sets target processes kill flag
+- if process is sleeping, wake
+- process exits when it next returns to user space or enters kernel using exit()
+
+exec(path, argv)
+- replaces calling process's memory image with a new program loaded from file specified by path
+- executable must be ELF file
+- new user addr space created
+- stack initialised with arguments strings from argv
+- the process identifier remains unchanged
+- on failure, return -1
+
+getpid
+- return process pid
+
+pausn(n)
+- suspend execution of calling process for at leaset n clock ticks
+- blocks and yields the CPU while waiting
+- when n ticks have elapsed, pause() returns 0
+- if process killed while paused, return -1
+### How do processes communicate xv6
+
+pipe: small kernel buffer
+exposed to processes as pair of file descriptors; one to read (p\[0]) one to write (p\[1])
+buffer is writing data to one end of pipe, makes data available for reading from the other end of pipe
+
+### How Processes start and end
+e.g.
+on boot, kernel runs init from userinit.c
+userinit calls allocproc tomark free process slot as used
+or 
+on fork() kernel invokes allocproc to alloc new process struct for child process
+
+
+????????????????????????????///
 # Chap 4 CPU Scheduling  
 
 # Chap 5 Synchronisation  
