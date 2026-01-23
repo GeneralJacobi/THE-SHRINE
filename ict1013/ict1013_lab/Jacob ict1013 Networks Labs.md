@@ -187,13 +187,71 @@ if delete vlan while port associated with it, port will not be associated with A
 
 after trunk enable
 
-pc a to pc b - no
+pc a to pc b - yes
 pc a to pc c - no
+pc b to pc c - no
 
 Why might you want to manually configure an interface to trunk mode instead of using DTP?
+not all equipment uses dtp, dtp is cisco only
 
 Reflection  
 1. What is needed to allow hosts on VLAN 10 to communicate to hosts on VLAN 20?  
-	- 
+	- trunk port
 2. What are some primary benefits that an organization can receive through effective use of VLANs?
-	- 
+	- sectioning off different groups to improve network performance
+
+legacy routing
+a. On R1, issue the show ip route command. What routes are listed on R1?  
+192.168.10.0 - 192.168.10.1
+192.168.20.0 - 192.168.20.1
+
+b. On both S1 and S2, issue the show interface trunk command. Are both S1  
+G1/0/1 and S2 G1/0/1 ports set to trunk?
+yes
+
+c. Issue a show vlan brief command on both S1 and S2. Verify that VLANs 10  
+and 20 are active and that the proper ports on the switches are in the correct  
+VLANs. Why is S1 G1/0/1 and S2 G1/0/1 not listed in any of the active  
+VLANs?  
+they are trunks not part of vlan
+
+d. Ping from PC-A in VLAN 10 to PC-C in VLAN 20. If inter-VLAN routing is setup  
+correctly, the pings between the 192.168.10.0 network and the 192.168.20.0  
+should be successful.  
+Note: It may be necessary to disable the PC firewall to ping between PCs.  
+yes
+
+e. Verify connectivity between devices. You should be able to ping between all  
+devices. Troubleshoot if you are not successful.
+ok done
+
+Reflection  
+- What is an advantage of using legacy inter-VLAN routing?
+	- ease of configuration.
+
+router on stick
+a. Enter the command to view the routing table in R1. What networks are  
+listed?  
+192.168.10.0/24 - 192.168.10.1/32
+192.168.20.0/24 - 192.168.20.1/32
+
+b. From PC-A, is it possible to ping the default gateway for VLAN 10?  
+yes
+
+c. From PC-A, is it possible to ping PC-C?
+yes
+
+What is the advantage of trunk-based or router-on-a-stick inter-VLAN routing?
+less machines to maintain, all configs on one device
+
+
+a. Enter show ip route command to view the routing table in S3. What networks  
+are listed?  
+192.168.10.0/24 - 192.168.10.1/32
+192.168.20.0/24 - 192.168.20.1/32
+
+b. From PC-A, is it possible to ping the default gateway for VLAN 10?  
+yes
+
+c. From PC-A, is it possible to ping PC-C?
+yes

@@ -1,3 +1,127 @@
+## Project
+
+Submissions to drop box
+- Report including
+	- Front page
+		- Team num
+		- All group members
+	- Addressing table containing
+		- addressing scheme
+		- device connection
+		- shld complement logical topo
+	- rationale on design
+		- Highlight considerations that demonstrate your understanding
+	- rationale on implementation 
+		- if allocated devices fully utilised and still insufficient,
+		- implement design while leaving out a level (given that all requierments per level must be met if implemented)
+		- then justify why and which level to be left out based on technical consideration
+	- DNS operation
+		- refering to wireshark captures on DNS server
+		- state exact line numbers of relevant network packets corresponding to the correct sequence of DNS ops to demonstrate understanding
+	- Reflection on using / not using AI tools
+		- may use ChatGPT or other genAI tools if suitable
+		- if using, sample screenshots of queries and ans obtained w/ teams comments on helpfulness
+		- if not using, comment why not
+- logical top diagram (good-quality pdf file) which shows:
+	- network devices + given hostname of our choice
+	- Connection links labled w/ exact interface / port num of device
+	- VLAN numbers
+	- Subnet address blocks
+	- Subnet masks
+	- IP Addresses assigned to network devices (if applicable)
+	- (Exclude IP Addresses assigned to user workstations / end devices)
+	- 
+	- Note
+	- Not recommended to use Cisco packet tracer to make diagram
+	- img quality bad
+	- Recommended Editors
+		- Dia Diagram Editor
+		- MS Powerpoint
+	- Link for Icons
+		- https://www.cisco.com/c/en/us/about/brand-center/network-topology-icons.html
+	- 
+- config files
+	- running-conf of network devices
+		- one file per device
+		- filename = hostname as oer logical topo
+		- do not change file format / combine files
+	- DNS config
+	- Wireshark capture on DNS server
+- in person demo w/ fault injections
+	- i.e. the profs fucking with us
+	- showcase resiliency and redundancy
+
+Details
+- physical building
+	- 4 levels
+		- Lvl 4:
+			- Country manager office
+				- 1x country manager
+				- 1x Dy country manager
+				- 2x secretary
+			- HR office
+				- 1x HR manager
+				- 1x HR executive
+			- Large meeting room
+				- 28 ports
+			- 1x network engineer 
+		- Lvl 3
+			- Solution Dev Dept
+				- 1x Solution Manager
+				- 2x Senior Software devs
+			- Network Dept
+				- 1x Network manager
+				- 1x senior network engineer
+				- 1x network engineer
+			- Server Room
+			- 1x HR executive
+		- Lvl 2
+			- Marketing & Sales Dept
+				- 1x Sales manager
+				- 1x Dy sales manager
+				- 8x sales executives
+			- 1x HR exceutive
+			- 1x Network engineer
+		- Lvl 1
+			- Customer Service dept
+				- 1x Service Manager
+				- 1x Dy Service Manager
+				- 10 Service Executives
+			- 1x HR executive
+			- 1x network Engineer
+			- 3x Small meeting room
+				- 2 ports each 
+	- each staff 1 ethernet port w/ internet access
+	- assume all ports have internet access???????
+- setup & host outward facing web server
+	- purpose:
+		- offer cashless payment service
+		- off promotions to attract customers to sign up
+- setup & host authoritative DNS server
+	- purpose:
+		- allow public to access web server via domain name
+- setup & host Caching DNS server
+	- purpose
+		- to support users in company to access internet w/o relying on public DNS servers like 8.8.8.8
+- Company's internal ip address block : 172.16.1.0/24 
+- Variable Length Subnet Mask will be used
+- No requirement to cate for future expansion
+- Coy is subscribed to 2x ISP (See Appendix A)
+
+Limitations / Implementation Considerations
+- Maximum Devices
+	- 1x Network rack
+	- 2x Router
+	- 6x switches
+- End devices not required, only some required for demo
+	- still require all ports to be setup correctly
+- WEBPAGE FOR WEB SERVER OPTIONAL
+- Required to come up with hostname in format: \[hostname].sitict.net 
+	- used for webserver
+- 
+
+Enable HSRP HotSwap router protocol to guard against Sudden disconnecttion of router (Some random y3 ICT tell me)
+
 ## Topic 1 | Introduction to Computer Networks
 
 Internet = interconnection of computer networks / network of networks
@@ -143,7 +267,7 @@ when a mac address is not found from the table, the switch will broadcast to all
 
 ## Topic 3 | Network Layer I : Internet Protocol and IPv4 Addressing
 
-Network layer provides layer and servicce
+Network layer provides layer and service
 - host-to-host (device to device / hop-to-hop)
 - source-to-destination (end device to end device)
 
@@ -153,7 +277,7 @@ Network layer provides layer and servicce
 | Performance | low overhead; as little unnecessasry delay as possible                          |
 | Robustness  | able to continue functioning despite isolated faults scatter throughout networs |
 | Cost        | as resource efficient as possible in order to be low cost                       |
-Desirable Criteria
+Desirable Criteria ^^^
 
 
 IP networks / datagram networks (same same)
@@ -213,7 +337,7 @@ Options
 - rarely used
 - deprecated (RFC 6814)
 
-whois cmd to find ip address of URL
+### whois cmd to find ip address of URL
 
 | Class | type         | change                     | range                        |
 | ----- | ------------ | -------------------------- | ---------------------------- |
@@ -222,10 +346,10 @@ whois cmd to find ip address of URL
 | C     | Uni          | 1st & 2nd bit 1, 3rd bit 0 | 192.0.0.0 - 223.255.255.255  |
 | D     | Multicast    | 1,2,3 bits 1, 4 bit 0      | 224.0..0.0 - 239.255.255.255 |
 | E     | Experimental | 1,2,3,4 bits 1             | 240.0.0.0 - 255.255.255.255  |
-classful addressing
-
-Network ID / Prefix
-Host ID / number
+### Classful addressing
+format:
+- Network ID / Prefix
+- Host ID / number
 
 Classless Inter-domain routing (CIDR)
 adopted in 1990
@@ -234,15 +358,16 @@ written as dotted notation 255.255.255.255 or slash notation /27
 original A,B,C class become public addr range
 private IP for private networks, require Network Address Translation to connect to outer world
 
-Special address blocks
-0.0.0.0/8 - reserve for indicating network // host
-- e.g. src addr for DHCP discover msg when host has no IP addr but needs one to send out IP packet
-127.0.0.0/8 - reserve for loopback addr within host
-- e.g. 127.0.0.1 commonly used to communicate with self
-169.254.0.0/16 - reserved for link-local addr for OS to assign to host when fails to obtain IP addr from DHCP server
-255.255.255.25/32 - reserve for limited broadcast addr within subnet
 
-#### Fixed Length Subnet Mask (FLSM)
+| ip                | reserved for                                                                           | e.g.                                                                                        |
+| ----------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| 0.0.0.0/8         | indicating network / host                                                              | src addr for DHCP discover msg when host has no IP addr but needs one to send out IP packet |
+| 127.0.0.0/8       | loopback addr within host                                                              | commonly used to communicate with self                                                      |
+| 169.254.0.0/16    | link-local addr for OS to assign to host when fails to obtain IP addr from DHCP server |                                                                                             |
+| 255.255.255.25/32 | limited broadcast addr within subnet                                                   |                                                                                             |
+Special address blocks
+
+### Fixed Length Subnet Mask (FLSM)
 
 used to improve security
 divide host number into subnet number and host number
@@ -256,7 +381,7 @@ limited broadcast addr = send broadcast in same subnet
 directed broadcast add = send broadcast to given subnet
 
 
-#### Variable Length Subnet Mask (VLSM)
+### Variable Length Subnet Mask (VLSM)
 
 allow 1 org to have subnets of different total host sizes in the same overall ip addr block
 
@@ -271,6 +396,125 @@ Subnet 2:
 	- 0111 0100. 0111 0001 . \[1111 1] 000 . 0000 0000 -  0111 0100. 0111 0001 . \[1111 1] 000 . 0000 0000
 
 ## Topic 4 | Data Link Layer II / Network Layer II : Network Design I, VLAN and Inter-VLAN Routing
+
+### Hierarchical network model
+recommend use 3 tiers of devices
+- Core tier
+	- high speed backbone connectivity
+- Distribution tier
+	- provide switching, routing, network access policy functions to access the network
+- Access tier
+	- provide network access
+	- switches on this layer are access switches
+
+enterprise network can span up to multiple buildings
+is modular, scalable
+if want to expand, can duplicate same hierarchy in all buildings and connect at core tier
+
+e.g.
+![[heirarchical network.png]]
+
+### Core
+Typically, core switch/ router installed in server room
+typically layer 3 switch / router
+### Distribution
+Typically, distribution switches are installed in server room
+interconnects access switches
+typically layer 3 switch
+
+This way, smaller LANs do not need core tier 
+
+### Access
+Typically access switches installed in equipment room of each level of building
+typically layer 2 switch
+
+### Collapsed Core design
+![[collapsed_core.png]]
+This design directly connects every distribution switches to every other distribution switch
+
+| Advantage                    | Disadvantage                   |
+| ---------------------------- | ------------------------------ |
+| one less machine to maintain | need to manage the connections |
+
+### Three Tier
+![[three-tier.png]]
+
+| Advantage                                         | Disadvantage                  |
+| ------------------------------------------------- | ----------------------------- |
+| simplify interconnection of distribution switches | Requires core switch / router |
+| save cost on cable-laying                         | device costs money lmao       |
+### Layer-3/Multilayer switch
+![[multilayer design.png]]
+basically, reduce device type, still keep fast switching and routing capabilities
+typically used for core and distribution
+but can be used for access if you have the \$\$\$
+
+### Virtual LAN
+On normal layer 2 switch, all devices on same broadcast domain
+with VLAN, can split into multiple network with single switch
+cost effective
+
+VLAN technically can be avoided by having more switches and routers, but practically, VLAN very useful e.g. to separate departments in 1 building
+
+VLANs are logical
+Each has unique ID num
+same vlan on diff switch will link tgt if switches connected
+generally most direct method is 1 link to support 1 VLAN
+
+### VLAN access mode
+port only need to carry frames belonging to 1 vlan as configured
+### VLAN trunk mode
+switches that port to mode to carry traffic for multiple vlans
+
+### VLAN frame
+![[vlan frame.png]]
+VLAN frames can be ID-ed by the tag portion of the frame as part of ethernet header
+- Type
+	- same as Ethernet Header field
+	- fixed hex value 0x8100
+- Priority & flag
+	- for VoIP
+	- out of scope
+- VLAN ID
+	- 12-bit
+	- decimal value range 0-4095
+
+VLAN tag is INSERTED into ethernet frame before sending over trunk
+Receiving switch removes tag before sending to dest
+
+### Native Vlan
+Designed for backwards compatibility
+frames belonging to the native VLAN do not get vlan tags inserted
+
+### Dynamic Trunking protocol
+DTP is Cisco proprietary protocol
+automates trunk negotiation between ports
+introduces 2 more modes
+- dynamic auto
+	- enable DTP
+	- wait passively for DTP trunk negotiation to become trunk or access
+- dynamic desirable
+	- initiates DTP trunk negotiation to become trunk / access
+
+![[DTP layout.png]]
+![[dtp table.png]]
+
+table is for SW1 Gi0/1 and SW2 Gi0/2
+if Gi0/1 = trunk (not dynamic) and Gi0/2 = access, will conflict and have unexpected network connectivity issues
+
+### Inter VLAN routing
+
+To enable communication between VLANs, use layer 3
+#### Legacy inter-VLAN routing
+VLAN, 1 switch, 1 router
+- limited ports; some need use for router, some need for switch
+![[legacy intervlan routing.png]]
+#### Router on a stick
+save ports, only need 1 trunk
+![[router on a stick.png]]
+#### Layer 3 switch routing
+1 device, better performance
+![[layer 3 switch routinng.png]]
 
 
 ## Topic 5 | Data Link Layer III / Network Layer III : Routing Concepts and ARP
