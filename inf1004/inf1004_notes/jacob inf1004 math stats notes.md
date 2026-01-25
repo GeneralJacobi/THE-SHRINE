@@ -605,7 +605,7 @@ $\sigma = \sqrt{\sigma^2}$
 Special Class of Random variable
 
 must exhibit
-- 1 of 2 discrete outcomes categorized as success//failure
+- 1 of 2 discrete outcomes categorized as success//failure / binary outcome
 - probability of success/failure is fixed over all trials
 - fixed and finite number of independent and identical trials
 

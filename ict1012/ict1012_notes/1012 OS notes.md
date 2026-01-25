@@ -435,6 +435,338 @@ use ':' in command mode and following options to get into ex mode
 
 
 
+
+# Temp revision
+
+### OS goals:  
+- Provide users with interface to hardware
+  - execute user applications  
+- Resource management
+  - use hardware in efficient manner
+  - cannot leave critical application to run later,
+  - come form of hierarchy of running programs
+
+Applications cannot directly manipulate many of the hardware components (CPU, Mem, I/O)  
+Ask OS to do for them  
+to maintain integrity of system
+
+OS provides communication to applications
+- Applications can use network for inter-process communication (loop-back devices)
+- OS provide local communication
+  - Pipes
+  - Shared Mem
+  - Passing messages
+
+### Overall comparison
+|               | Layered                                                                 | Modular                                                    | Micro Kernel                                                                | Monolithic Kernel                                           |
+| ------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Structure** | **Heirarchical Layers**; each layer only intereact with one layer below | **independant modules**; dynamically loaded and unloaded   | **Minimal kernel w/ only essential services**; other services in user space | **All Core services in Kernel Space**                       |
+| Performance   | **Moderate** <br>(overheads from layering slows execution)              | **High** <br>(Modules run effeciently)                     | **Low** <br>(frequent inter process comms adds overhead)                    | **High** <br>(direcct function calls make quick execcution) |
+| Reliability   | **Moderate** <br>(clear seperation, easy debug, limit effeciency)       | **High** <br>(Fault modules isolate easy, replace easy)    | **High** <br>(fault in user space dont affect kernel)                       | **Low** <br>(single fault can crash whole system)           |
+| Flexibility   | **High** <br>(easy to modify & replace)                                 | **Very high**<br>(support extensibility and customisation) | **Very high** <br>(modular makes it easier to add services)                 | **Low** <br>(tightly coupled, make changes difficult)       |
+
+### Micro Kernel
+| Benefits                                                    | Detriment                                                             |
+| ----------------------------------------------------------- | --------------------------------------------------------------------- |
+| Easier to extend a microkernel                              | bigger performance overhead due to user space to kernel communication |
+| Easier to port the operating system to new<br>architectures |                                                                       |
+| More reliable (less code is running in )                    |                                                                       |
+| More secure                                                 |                                                                       |
+### Chap 1 others
+
+xv6 is monolithic
+
+Complexity of OS depends on the usage of device,
+Dedicated devices (rockets, washing machine) - simple OS / API
+General Devices (PCs, Mobile phones, Servers) - More complicated but flexible APIs
+
+is organised into distinct directories & source files that correspond to major subsystems  
+- kernel/:
+  - contains all core xv6 kernel source files:
+    - main.c: kernel init & boot process
+    - syscall.c: system call implementation and dispatch
+    - trap.c: trap and interrupt handling
+    - proc.c: process management (creation, scheduling, context switchin)
+    - vm.c: cirtual memory management and page tables  
+    - fs.c, file.c, inode.c: filesystem implementation
+- user/: user-level apps, including shells (sh.c), commands (ls.c, cat.c) and utilities
+- makefile: Buidl instructions to compile kernel and user programs and run xv6 on QEMU
+- README and other docs: Documentation and build/run instructions
+
+### OS security
+- Confidentiality
+	- only users with the right privileges can access the data
+	- Data encryption
+	- Access Control
+- Integrity
+	- only users with the right privileges can modify data
+	- Data Validation
+	- Hash Checks
+- Accessibility
+	- Resources are available to users requiring them
+	- High Availability
+	- High Redundancy
+
+### What is system call
+- is programming interface to services provided by OS
+- syscalls invoked by triggering specific interruptions that the CPU Instruction Set Architecture (ISA) reserves for OS purposes
+- syscalls mostly accessed by programs through API rather than direct call
+- because API specifies set of functions that are available to programmer
+	- including params passed and expected return values
+	- handles the call and returns the values to the caller
+	- caller does not need to know anything about the call, just obey API requirements and understand what OS will do as result of call
+	- most details hidden from caller, managed by run-time support library
+	- API provides 
+		- abstraction of function call behaviors
+		- interoperability among diff OS/HW versions
+		- (usually) efficient access to System Calls
+		- (with the above) convenient simplified way to access
+
+Asm / kernel mode:
+- ecall; go to interrupt table
+	- this results in some overhead
+- (x86)int 0x2E/0x80; read call from interrupt table
+- 
+- check register a7 for specific call
+- Arguments to call  placed in registers a0-a6
+- if even more arguments, place those in stack
+
+### Syscall Param Passing
+
+3 general Methods:
+1. pass param in register (by value)
+2. pass param in buffer (by value)
+	- Param stored in block of mem
+	- address of block passed as param inregister
+3. Mixed, using mem block w/ registers
+
+### syscall Security
+- Hardware Security System calls can execute privilege ISA instructions
+- what instructions should be privileged only and why
+	- btw sudo may give user priv mode but is not kernel mode, still stuck in user mode
+	- shutdown is priv
+		- why? as may interfere with task other users may be doing
+	- making mem executable
+		- certain areas should not be executable due to safety or running reasons
+		- may be used to exploit and get arbitrary remote code execution
+	- Interrupt Handling
+		- INT n: Software Interrupt
+		- some interrupts may require privilege depending on vector (????)
+		- IRET. IRETD (x64) sret/mret
+		- return from interrupt (RISC-V) (restore processor state)
+	- System Management
+		- RDPMC
+			- Read performance monitoring counters
+			- May require privilege depending on config
+	- Virtualization
+		- VMRUN: Launch a virtual machine
+	- Access / modification to registers
+		- May compromise system integrity
+		- LGDT/SGDT (x86): Load/Store Global descriptor table register
+		- MOV CRx (CR0-4 in x64; sstatus, stvec, satp in RISC-V) : move val to control register
+	- Certain (Virtual) Mem management
+		- LGDT/LIDT: Manipulate descriptor tables for mem management
+		- hfence\.vvma/ hfence\.gvma / sfence\.vma (RISC-V)
+
+When CPU executes instruction that goes through kernel mode
+automatically modify 2 bits in CS register indicate privilage mode in system
+(CPL for intel; CPU internal state priv RISC-V)
+set back to original val when return to user
+
+### Privileged mode problem
+how 2 do:
+- Memory isolation  
+	- ensures user programs cannot access kernel space directly  
+- Privileged instructions (e.g., I/O control,  memory management) 
+- non-privileged instructions (e.g., arithmetic)
+
+### Trap handling
+Traps
+1. system call: user prog executes ecall instruction to request service from kernel
+2. exception: instruction performs illegal action, e.g. accessing invalid virtual mem addr
+3. interrupt: hardware signals that it needs attention, e.g. disk finished read/write
+Execution of user code should resume transparently after trap
+user should not be aware anything special has happened (especially for device interrupts)
+
+![[xv6-trap-handling.png]]
+
+- flow: 
+- === Usermode ===
+	- hardware declare interrupt or exception
+		- syscall uses ecall to inform that kernel user want to exec service
+		- exceptions raised y hardware
+- === Usermode ===
+- === Kernel Mode===
+	- os saves users process' registers into *trapframe*
+		- hardware sets sepc to current PC 
+			- (supervisor exception program counter)
+			- (special control = status register in RISC-V CPU)
+		- Disable interrupts, sstatus.SIE=0
+			- dont want to jump to other places incase have other interrupts simultaneously
+		- record cause, scause
+			- part of return capability
+		- jump to addr indicated by stvecc (uservec in trampoline)
+		- trampoline.S saves current user process' registers into trapframe + switch to kernel stack
+	- distinguishes event type and executes requested kernel service
+		- kernel exec trap.c
+		- trap.c distinguish between syscall, execption, interrupt
+		- exec requested kernel service
+	- restores saved registers from *trapframe*
+		- trampoline.S restores saved user process' registers
+		- kernel increments sepc to resume next user instruction
+		- exec sret (supervisor return) and CPU switches back to user mode
+- === Kernel Modse===
+- === Usermode ===
+	- resume user process
+
+### What is kernel stack
+
+User stack is user space
+used when process run in user mode
+
+Kernel stack is kernel space
+used when process traps into kernel
+kernel stack is per-process; ever process has own kernel stack allocated in mem
+
+enter kernel stack from user stack when ecall, exception, interrupt (trap occurs)
+exit kernel stack to user space with sref (return from trap)
+
+### Why  handle traps like this
+- Security: 
+	- prevent user prog from directly handling privileged events (interrupts)
+- Isolation: 
+	- devices shared among processes; 
+	- only kernel coordinate access
+- Simplicity: 
+	- keep user programs focused on computation
+	- kernel manage resources
+- Consistency
+	- Ensure all traps handled in uniform way by kernel
+
+### What does syscall.c do in system call hanndling
+- Syscall.c is dispatcher for system calls
+- defines dispatching table mapping system calls numbers to handler functions
+
+Read syscall number from reg a7 in trapframe
+use dispatch table to find corresponding handler
+Execute handler, place return val in a0 register for user program; if invalid, return -1
+
+### What is a process
+A program in a piece of memory being executed and the services needed to execute it
+A program in execution; process execution must progress in a sequential fashion
+Program is a passive entity stored on disk (executable file)
+### examples of processes
+batch system - called jobs
+- time-shared systems - user programs or tasks
+
+Process is active
+- Program becomes process when executable file loaded into mem
+
+Execution can be done in many ways
+- CLI
+- mouse double click
+
+### What is process state
+
+Scheduler determines the next state
+
+- states
+	- new: process is being created
+	- running: process being executed
+	- waiting: process waiting for some event to occur
+	- ready: process waiting to be assigned to a processor
+	- terminated: process has finished execution
+
+![[process_states.png]]
+
+### Process control block
+
+info associated with each process (task control block)
+- Process state
+	- To check state of process and its child processes
+- Process Identifier
+- Program counter
+- CPU registers
+- CPU scheduling info
+	- Priorities, scheduling queue pointers
+- Mem-management info
+	- mem allocated to process
+- Accounting info
+	- CPU used
+	- clock time elapsed since start
+	- time limits
+- I/O status info
+	- I/O devices allocated to process
+	- list of open files
+- Inter-process communication
+
+![[what-is-process-control-block.png]]
+
+### Process Memory
+- Stack
+	- function param
+	- return addr
+	- local variables
+- heap
+	- dynamically alloc-ed mem during rutime
+	- managed via calls like malloc and free
+- data section
+	- global & static variables which are allocated and initialised prior to exec
+- text section
+	- compiled program code (from non-volatile storage) when launched (other sections (.init, .rodata))
+- BSS (Block Stated by Symbol)
+	- similar to Data sect, uninitialized global and static variables 
+
+when processes are stored and restored, this additional info must be store and restored together
+like PC and program registers
+
+#### when might stack and the heap clash?  
+- When invoking a function the OS uses the stack to create a new function frame
+	- (passing arguments, local variables, and back up of the necessary registers).  
+- When invoking a malloc the allocated memory area is taken from the top of the heap. 
+	- If the distance between stack and heap is less than the required space an error will happen.
+
+Note stack grow down in addr num, heap grow up in addr num
+if meet, stack overflow / cannot malloc/new, insufficent mem
+
+![[process-memory.png]]
+
+### Why schedule? just run lol
+
+Processes can be described as
+- I/O bound
+	- spend more time doing I/O than computation, many short cpu burst
+- CPU-bound
+	- spend more time doing computation; few long CPU bursts
+
+- Long term scheduler
+	- aka job scheduler
+	- selects which processes shld be brought into ready queue
+	- invoked infrequently (seconds / minutes); ay be slow
+	- controls degree of multi-programming
+	- strives for good process mix
+- short-term scheduler
+	- CPU scheduler
+	- selects which process shld be executed next and allocates CPU
+	- invoked very frequently (milliseconds); must be fast
+
+Need schedule to maximuse CPU usage
+share time
+deliver acceptable response time
+
+swapping PCB between processes is considered overhead and that cpu time is considered lost
+
+### How is process queue
+
+3 queues
+- Job 
+	- set of all system tasks
+- Ready
+	- set of all processes residing in main mem, ready and waiting to exec
+- Device
+	- set of all processes waiting for i/o device
+Processes can migrate among various queues
+
 # Chap 1: Intro to OS and xv6
 
 Libraries and APIs are not OS-es  
@@ -449,13 +781,13 @@ Everything else is either a system program (which ships with OS) or application 
 
 OS goals:  
 - Provide users with interface to hardware
-  - Provide friendly environment (dependant on type of user)
+  - Provide friendly environment (dependent on type of user)
   - execute user applications  
   - make solving user problems easier
 - Resource management
-  - use hardware in effecient manner
-  - cannot leave critcal pplication to run later,
-  - come form of heirachy of running programs
+  - use hardware in efficient manner
+  - cannot leave critical application to run later,
+  - come form of hierarchy of running programs
 
 Computer system components:  
 - Hardware
@@ -477,7 +809,7 @@ Computer system components:
 
 Applications cannot directly manipulate many of the hardware components  
 Ask OS to do for them  
-You dont want applicaitons poking around your hardware  
+You dont want applications poking around your hardware  
 dont want users to code  certain actions for hardware that may break it, e.g. moving harddrive arm beyond operating range
 is for security  
 
@@ -514,16 +846,16 @@ OS provides communication to applications
 even with all these capabilities it may or may not be enough  
 
 for specialied OS, e.g. rocket launch systems where users know what they are doing, or simple washing machine with less interactino with users,  
-May be enough to do just these thigns  
+May be enough to do just these things  
 
 For devices like Iphone, samsung, it must be more flexible and provide powerful APIs. So other users can develop apps and programms for the OS  
 e.g. Google developed android focusing on developers, making well documented API that ease implementation of applications
 
 ## How is OS organised  
 
-One or more CPU, device controller  connected through common bus, providing shared access to shared mem  
+One or more CPU, device controller connected through common bus, providing shared access to shared mem  
 
-Concurrent executino of CPUs and devices competing tfor memory cycles  
+Concurrent execution of CPUs and devices competing for memory cycles  
 
 I/O devices and CPU can execute concurrently  
 each device controller has local buffer, which CPU uses to move main mem to/from buffers  
@@ -535,7 +867,7 @@ Device driver provide OS with uniform interface to access device
 ## Approaches to OS design
 
 - Layered approach
-  - start at hardware layer, build on neccessary layers without subcomponents that interact on same layer.
+  - start at hardware layer, build on necessary layers without subcomponents that interact on same layer.
   - one layer is one big essential piece
   - each layer built on top of the last
   - bottom layer 0 is hardware
@@ -546,20 +878,20 @@ Device driver provide OS with uniform interface to access device
   - start at hardware and add on functionality in layers.
   - May contain components that live on same layer that interact with each other
   - uses object oriented approach
-  - each core component is seperate
+  - each core component is separate
   - each talks to others over known interfaces
   - each loadable as needed within kernel
 - Micro-Kernel
-  - Split into kernel Space and user spacce
+  - Split into kernel Space and user space
   - Apps and services run in user space
   - essential abstractions run in kernel space
 - Monolithic Kernel
-  - clear seperation between user and kernel
-  - all aspeccts of kernel share same memory space
+  - clear separation between user and kernel
+  - all aspects of kernel share same memory space
   - user mode apps do not have access to all instructions
   - certain cpu instructions are limited to kernel mode only
   - many parts are integrated into the kernel
-  - like Virtual mem, drivers, User interffacce, mem management, file system
+  - like Virtual mem, drivers, User interface, mem management, file system
   - if any part is compromised, it exists in the kernal space and may grant access to other parts of the kernel
 
 ## Micro Kernel System Structure
@@ -836,25 +1168,52 @@ set back to original val when return to user
 can write apps but must implement every user interface, device driver, mem handling, control flow it needs
 
 Cannot ensure multi process running simultaneously without interfering with each other
-no sccheduler
+no scheduler
 
 ## What is Privileged Mode Problem
 
-============= TO WRITE ====================
 Switching mode is a hardware instruction, dont want to do through registers, opens attack surface
+
+how 2 do:
+- Memory isolation  
+	- ensures user programs cannot access kernel space directly  
+- Privileged instructions (e.g., I/O control,  memory management) 
+- non-privileged instructions (e.g., arithmetic)
+
+
+Difference in Modes:
+User Mode: 
+- Applications run in user mode by default.
+- Can run only non-privileged instructions, memory isolation where applications can only access their assigned memory space
+	- Memory isolation
+		- they cannot access kernel or other applications memory, no direct hardware access.\
+Kernel Mode
+- Privileged access via traps/system calls for protection
+- Can run all instructions, memory management, direct hardware access interrupt control CPUs detect illegal privileged instructions in user mode and raise exceptions (traps)
+
+OS ENFORCES
+Resource isolation
+- applications must request resources through system call
+- the kernel decides how to allocate them fairly 
+- Memory isolation
+	- applications cannot access memory outside its allocated space. If application tries, CPU raises a segmentation fault, protecting other processes and the kernel
+Mode Switch
+- Traps save context, dispatch handlers, return
 
 ## xv6 - handling traps
 
 CPU may suspend normal instruction execution + transfer control to kernel mode in 3 situations (this is the Traps in xv6)
 1. system call: user prog executes ecall instruction to request service from kernel
 2. exception: instruction performs illegal action, e.g. accessing invalid virtual mem addr
-3. interrupt: hardware sigals that it needs attention, e.g. disk finished read/write
+3. interrupt: hardware signals that it needs attention, e.g. disk finished read/write
 Execution of user code should resume transparently after trap
 user should not be aware anything special has happened (especially for device interrupts)
 
 
 user can initiate syscall like write to file through API
-but somtimes is OS that initiate syscall
+but sometimes is OS that initiate syscall
+
+![[xv6-trap-handling.png]]
 
 - flow: 
 - === Usermode ===
@@ -885,11 +1244,6 @@ but somtimes is OS that initiate syscall
 - === Usermode ===
 	- resume user process
 
-## But like what is an exception
-## But like what is an interrupt
-## But like what is an syscall
-
-
 ## What is kernel stack
 
 User stack is user space
@@ -911,7 +1265,6 @@ use dispatch table to find corresponding handler
 Execute handler, place return val in a0 register for user program; if invalid, return -1
 
 ## Why  handle traps like this
-
 - Security: 
 	- prevent user prog from directly handling privileged events (interrupts)
 - Isolation: 
@@ -927,12 +1280,12 @@ Execute handler, place return val in a0 register for user program; if invalid, r
 
 ### What is a process
 A program in a piece of memory being executed and the services needed to execute it
-A program in execution; process execcution must prograss in a sequential fashion
-
-batch system - jobs
+A program in execution; process execution must progress in a sequential fashion
+Program is a passive entity stored on disk (executable file)
+### examples of processes
+batch system - called jobs
 - time-shared systems - user programs or tasks
 
-Program is a passive entity stored on disk (executable file)
 Process is active
 - Program becomes process when executable file loaded into mem
 
@@ -974,6 +1327,8 @@ info associated with each process (task control block)
 	- list of open files
 - Inter-process communication
 
+![[what-is-process-control-block.png]]
+
 ### Process Memory
 - Stack
 	- Temp data like
@@ -993,8 +1348,16 @@ info associated with each process (task control block)
 when processes are stored and restored, this additional info must be store and restored together
 like PC and program registers
 
+#### when might stack and the heap clash?  
+- When invoking a function the OS uses the stack to create a new function frame
+	- (passing arguments, local variables, and back up of the necessary registers).  
+- When invoking a malloc the allocated memory area is taken from the top of the heap. 
+	- If the distance between stack and heap is less than the required space an error will happen.
+
 Note stack grow down in addr num, heap grow up in addr num
 if meet, stack overflow / cannot malloc/new, insufficent mem
+
+![[process-memory.png]]
 
 ### Why schedule? just run lol
 
