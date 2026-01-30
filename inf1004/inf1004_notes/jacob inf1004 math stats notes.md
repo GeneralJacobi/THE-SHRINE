@@ -544,8 +544,9 @@ Probability of specific outcome
 P(X=x) = $\binom{n}{x}p^x(1-p)^{n-x}$
 - x = num of successes
 - $\binom{n}{x}$ = total num combinations
-	- n = total num of trials outcomes
-	- x = num successes
+	- n = total num of trials outcomes (e.g. total students)
+	- x = num successes (num students you want to pass / fail)
+		- e.g. if goal is to fail all, x = total num students
 	- $\binom{n}{x} = \frac{n!}{(n-x!)x!}$
 - p = probability of success outcome
 
@@ -641,11 +642,18 @@ P($L_b \leq x \leq U_b) = \frac{U_b-L_b}{U_l}$
 - $U_b$ - Upper bound
 - $U_l$ - Upper Limit of Continuous space
 
-|                    | Continuous random variable                                                 |
-| ------------------ | -------------------------------------------------------------------------- |
-| mean               | E(X) = $\mu = \int_{-∞}^∞ f(x)dx$                                          |
-| Variance           | Var(X) = <br>$\sigma^2 = \int_{-∞}^∞ (x-\mu)^2 \int (x)dx$                 |
-| Alternate Variance | Var(X) = $\sigma^2 = E(X^2)-\mu^2$<br>Where $E(X^2) = \int_{-∞}^∞ x^2f(x)$ |
+|                    | Continuous random variable                                                          |
+| ------------------ | ----------------------------------------------------------------------------------- |
+| mean               | E(X) = <br>$\mu =$<br>$\int_{-∞}^∞ f(x)dx$                                          |
+| Variance           | Var(X) = <br>$\sigma^2 =$<br>$\int_{-∞}^∞ (x-\mu)^2 \int (x)dx$                     |
+| Alternate Variance | Var(X) = <br>$\sigma^2 =$<br>$E(X^2)-\mu^2$<br>Where $E(X^2) = \int_{-∞}^∞ x^2f(x)$ |
+
+Z = $\frac{x-\mu}{\sigma}$
+$\mu = np$
+$\sigma^2 = np(1-p)$
+
+approximation
+X~B(n,p) -> Y~N(np,np(1-p))
 
 ## Continuous spaces
 For all intervals of \[a,b] (when all possibilities are equally likely):
@@ -690,6 +698,7 @@ $P(X=x) = \int_c^d f(x)dx = 0$
 
 So can only find probability for intervals
 $P(a < X < b) = P(a \leq X < b) = P(a < X \leq b) = P(a \leq X \leq b) = \int_a^b f(x)dx$
+less than or less than equals doesnt matter as including that specific value does not matter due to nature of continuous space
 
 Requirements of density functions:
 - $f(x) \geq 0$
@@ -740,3 +749,57 @@ P($-z \leq Z \leq z$) = P($Z \leq z$) - P($Z \leq -z$)
 Can also find Z given probability
 P(Z < z) = 0.95
 means z = 1.645
+
+
+# Chap 5
+
+## Approximate Binomial Distribtion
+
+Given X ~ B(n,p) with n so large such that np >5 and n(1-p) > 5
+can use X ~ N($\mu, \sigma^2$) where $\mu$ = np, $\sigma^2$ = np(1-p)
+
+| Inequality type | Correction             |
+| --------------- | ---------------------- |
+| P(X = a)        | P($a-0.5 < X < a+0.5$) |
+| P(X > a)        | P(X > a + 0.5)         |
+| P(X $\leq$ a)   | P(X < a + 0.5)         |
+| P(X < a)        | P(X < a - 0.5)         |
+| P(X $\geq$ a)   | P(X > a - 0.5)         |
+Continuity Correction
+
+## Combining Random Variables
+
+Add mean is add means of both
+diff mean is subtract both
+E(X+Y) = E(X) + E(Y)
+E(X-Y) = E(X) - E(Y)
+
+Add variance is add variance of both
+diff variance is still add both lol
+Var(X+Y) = Var(X) + Var(Y)
+Var(X-Y) = Var(X) + Var(Y)
+
+
+Given discrete / continuous random variables X, Y as well as constants a, b
+$E(aX \pm b) = aE(X) \pm b$
+$Var(aX \pm b) = a^2Var(X)$
+
+the following are true if X and Y are independent
+$E(aX \pm bY) = aE(X) \pm bE(Y)$
+$Var(aX \pm bY) = a^2Var(X) \pm b^2Var(Y)$
+
+if X and Y are normal distribution, $aX \pm bY$ is also normal
+if X and Y are binomial distribution, $aX \pm bY$ is also binomial, only if they have the same success probability p
+
+## Statistical Studies
+Inferential Statistics is to obtain sample statistics to make inferences about population parameters in order to answer our questions.
+calculate $\bar{x}$, infer $\mu$
+
+steps:
+1. Curiosity about something
+2. Questions about a parameter (variable)
+	- What are statistical qns
+	- a qn that you can collect data with variability
+		- Variability: the degree to which data points vary
+1. Collect data appropriate for that parameter
+2. Make inferences about that value of the parameter
