@@ -1498,6 +1498,261 @@ on fork() kernel invokes allocproc to alloc new process struct for child process
 ????????????????????????????///
 # Chap 4 CPU Scheduling  
 
+## Process vs thread
+- process can fork which makes new process w/ clone of memory
+- to create a large amount of proccesses may not be efficient enough / memory intensive
+
+Process are good but a bit restrictive
+
+Modern Applications follow multi threaded design
+Threads run within an application
+Multiple tasks with the application can be implemented by separate threads  
+▪ Update display  
+▪ Fetch data  
+▪ Spell checking  
+▪ Answer a network request  
+▪ Process creation is heavy-weight while thread creation is light-weight  
+▪ Can simplify code, increase efficiency  
+▪ Kernels are generally multithreaded
+
+## Benefits of using threads
+- Economy
+	- Less mem allocation needed
+	- cheaper than process creation
+	- thread switching lower overhead than context switching.
+- Resource sharing
+	- Sharing of original process memory space
+	- threads share memory and the resources of the process to which they belong to
+	- easier than shared memory or message passing.
+	- sharing code and data allows an application to have several different threads of activity within the same address space
+- Scalability / Responsiveness
+	- Scalability
+		- threads can run in parallel on different processing cores.
+	- Responsiveness
+		- may allow continued execution if part of process is blocked, especially important for user interfaces
+
+Some threads do not return their stack, depends on structure, but  stack may be needed for follow up functions
+
+### When is it better to use process or use threads
+| Processor                                                                                                                | Example                                                                                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fault-Tolerance  <br>▪ Reliability  <br>▪ Robustness  <br>▪ Isolation  <br>▪ Security  <br>▪ Multi-Core  <br>Utilization | Tabs in web-  <br>browsers  <br>▪ Critical Systems  <br>(Avionics /  <br>Autonomous  <br>Vehicles)  <br>▪ Distributed  <br>systems  <br>▪ Sandboxes or job  <br>pools for untrusted  <br>code |
+
+| Threads                                                                                                     | Example                                                                                          |
+| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Lightweight  <br>Applications  <br>▪ Performance  <br>▪ Shared memory  <br>allows faster  <br>communication | UI-Applications  <br>▪ I/O-bound tasks  <br>▪ Background tasks  <br>▪ Games and  <br>simulations |
+
+
+| Aspect            | Thread                                                                                                   | Processes                                                                                               |
+| ----------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Definition        | Lightweight execution units within a single process,  <br>sharing the same resources and memory space    | Independent execution units with their own memory  <br>space, resources, and operating system identity  |
+| Memory Space      | Share the same address space, allowing direct  <br>access to shared data and faster communication        | Have independent address spaces, providing strong  <br>isolation but making communication slower        |
+| Resource Sharing  | Share resources like file descriptors, sockets, and  <br>memory, enabling lightweight collaboration      | Have separate resources, requiring explicit  <br>mechanisms (e.g., IPC) for collaboration               |
+| Creation Overhead | Lightweight and faster to create since they don’t need  <br>a new address space or resource duplication. | Heavier to create due to the need for new address  <br>space, resource tables, and kernel structures    |
+| Context Switching | Faster because they share the same memory space  <br>and require less state saving/restoration.          | Slower as the kernel must switch the address space  <br>and reload memory management structures         |
+| Communication     | Direct communication through shared memory,  <br>making it very fast and efficient                       | Requires inter-process communication (IPC)  <br>mechanisms like pipes, sockets, or shared memory        |
+| Isolation         | Low; threads can access and modify each other’s  <br>memory, increasing the risk of corruption           | High; processes are fully isolated, ensuring that one  <br>process cannot directly affect another       |
+| Crash Impact      | A crash in one thread can crash the entire process  <br>since all threads share the same address space   | A crash in one process does not affect others,  <br>providing fault isolation and robustness            |
+| Performance       | Better performance for tasks requiring frequent  <br>communication or sharing of data                    | Higher overhead but more secure and robust for tasks  <br>requiring strict isolation or fault tolerance |
+| Examples          | Threads in a multithreaded application, e.g., web  <br>servers or real-time applications.                | Processes like browser tabs (Chrome), isolated  <br>services, or separate system programs.              |
+
+
+## Concurrency vs parallelism
+
+Concurrent exec: each process does a little bit of processing, taking turns on 1 processor
+
+Parallelism: multiple cores, executing different programs at one time
+
+As num threads increase, architectural support for threading increases
+- CPU need cores and hardware threads
+- e.g. Oracle SPARC T4: 8 Core 8 threads
+
+## Multicore programming
+
+Multicore or multiprocessor systems.
+challenges include:  
+- Dividing activities: 
+	- examining applications to find areas that can be divided into separate, concurrent tasks.  
+- Balance:
+	- even if tasks can run in parallel, still need ensure that tasks perform equal work of equal value.  
+- Data splitting:
+	- the data accessed and worked on by the tasks must be divided to run on separate cores.  
+	- Avoid conflict of writing to same file
+- Data dependency:
+	- must ensure execution of tasks is synchronized, accommodate the data dependency.  
+- Testing and debugging:
+	- many different execution paths
+	- testing and debugging such concurrent programs is inherently more difficult.
+
+### Data Parallelism
+distributes subsets of the same data across multiple cores, same operation on each
+![[data-paralleism.png]]
+
+### Task Parallelism
+distributing threads across cores, each thread performing unique operation
+![[task-paralleism.png]]
+
+
+### Examples
+| Data Parallelism                                                                                                              | Task Parallelism                                                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Matrix Multiplication  <br>Image Processing  <br>Training Neural Networks  <br>Sorting Large Data  <br>Scientific Simulations | Web Server  <br>Video Processing Pipeline  <br>Compilers  <br>Autonomous Driving  <br>Rendering Graphics |
+
+
+## User vs Kernel threads
+
+User thread
+- managed by user-level library
+	- e.g.
+	- POSIX Pthreads
+		- User threads
+	- Win32 threads
+		- Has both user and kernel threads
+	- Java threads
+		- user threads
+- light, context switch need fewer ops
+
+Kernel threads
+- Supported by kernel
+- more expensive, behave similar to process
+- Need full context switch, req system calls
+- have own TCB and kernel stack
+- Scheduled by kernel
+
+Examples using these threads
+- Virtually all general-purpose OS
+- Windows
+- Solaris
+- Linux
+- Tru64 Linux
+- Mac OS X
+
+
+| Aspect            | Kernel Thread                                                                                                                 | User Thread                                                                                                                            |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Context Switching | Requires kernel intervention, involving a full context  <br>switch, including kernel mode transitions, making it  <br>slower. | Performed entirely in user space, involving only  <br>thread-specific data like registers and stack, making it  <br>faster             |
+| Resource Sharing  | Share process-level resources like memory, file  <br>descriptors, and sockets, enabling fast communication                    | Also share process-level resources, just like kernel  <br>threads, since they run within the same process                              |
+| Portability       | Dependent on operating system features, making  <br>them less portable across platforms                                       | Portable across platforms because they are  <br>implemented entirely in user-space libraries                                           |
+| System Calls      | Require system calls for creation, synchronization, and  <br>scheduling, leading to higher overhead                           | Do not require system calls for thread management,  <br>avoiding kernel involvement and reducing overhead                              |
+| Scalability       | Achieve true parallelism across multiple CPU cores as  <br>the kernel scheduler maps threads to cores                         | Limited parallelism since user threads are mapped to  <br>kernel threads (M:N mapping), depending on kernel  <br>threads for execution |
+| Crash Impact      | A crash in a kernel thread affects only the thread or  <br>the process it belongs to, ensuring fault isolation.               | A crash in the user-space thread scheduler affects all  <br>threads managed by it, potentially crashing the  <br>process               |
+| Performance       | Higher overhead due to kernel-level operations like  <br>thread creation, context switching, and scheduling                   | Lower overhead as thread management is lightweight  <br>and occurs entirely in user space                                              |
+| Examples          | Linux kernel threads, Windows threads, POSIX threads  <br>(mapped to kernel threads in most OSes).                            | Green threads (Java), fibers (Ruby), or lightweight  <br>threads in user-space thread libraries                                        |
+
+## Thread Models
+![[thread-models.png]]
+
+1-to-many
+- less intensive
+- still gives decent responsiveness / feeling of concurrency
+- however, when 1 thread makes a syscall, other threads will not be able to run priv instructions as kernel thread is busy
+- is stuck to 1 particular core as there is only one thread
+	- 1 kernel thread manage 1 core
+
+many-to-many
+- provide more kernel threads
+	- but always lass kernel threads than user threads
+- now can do parallelism on multiple kernel threads
+
+one-to-one
+- each user thread map to kernel thread
+	- Making new user thread makes new kernel thread
+- More concurrency + parallel processors
+- Num threads per process sometimes restricted
+	- big overhead
+
+two-level
+- similar to mant-to-many
+- allows threads to be bound to kernel threads
+- so some user threads is many-to-many, some is one-to-one
+
+
+
+## Pthreads
+is from IEEE 1003.1c
+POSIX is API for thread creation and synchronization
+Is a specification not implementation
+- API specifies behavior of thread library
+- implementation up to developers
+May be provided as user or kernel level
+
+methods:
+- pthread_create()
+	- Create new thread
+- pthread__attr_init()
+	- init attributes like stack size, schedule size, priority
+- pthread_exit()
+	- terminates calling thread
+- pthread_detach()
+	- detach thread, releasing resources after termination
+	- used to manage resources
+- pthread_cancel
+	- request cancellation of thread
+	- e.g. master thread sees thread waiting too long
+
+
+## Linux threads
+Linux calls them tasks, special boi
+methods
+- sysccall clone()
+	- create thread
+	- allows cchild task to share addr space of parent
+	- Control flags
+		- CLONE_FS - share file-system info
+		- CLONE_VM - same mem space is shared
+		- CLONE_SIGHAND - Signal handles shared
+		- CLONE_FILES - set of opened files shared
+- struct task_struct - points to process data structures (shared / unique)
+
+### xv6 threads
+xv6 does not have native notion of threads, due to minimal design
+
+- thread is within process
+	-  share process resources
+	- thread only has own stack and CPU state
+- threads in xv6 is an extension of process struct
+	- becus thread is like another process but no separate addr space
+	- reuses parent mem
+	- threads only carry minimal execution content needed to run independently
+
+- Clone system reuses kfork, assigning the same page as parent to thread
+- kfork
+	- kfork takes unused proceedure (max 64, ids created on boot)
+	- dupes info from parent, duping whole mem space
+	- increase num processes accessing opened file descriptors of parent
+- clone:
+	- Clone receives pointer to function thread will exec
+	- each thread uses own struct proc to store info
+		- But all share same pagetable
+	- threads have integer isThread that is set when invoking clone
+		- Avoid duping mem space when making thread
+	- each thread needs own stack
+		- process that calls clone is responsible for calling sbkr/malloc_align to alloc stack space
+		- clone allocs 22 pages using malloc
+			- 1 for stack 
+			- 1 for guard
+			- this to avoid writing into heap (in case whole stack used)
+		- if malloc cannot find space,
+			- invoke sbkr to mape more pages into user space
+	- thread need own trap frame
+		- since trapframe only accessible to kernel,
+		- clone copies each thread trapframe above PHYSTOP limit
+
+how to close threads
+- kexit
+	- closes all open files
+	- if there is any child process alive, assigned to init (to reparent)
+	- wake parent of child/thread
+		- this  parent will be incharge of freeing mem if waiting
+	- all children that are threads are killed
+- kwait/join
+	- traverse all processes, check which children have exited
+		- collect exit status into addr given
+		- releases child mem
+	- kwait ignores threads
+	- join ignores non-threads
+		- join returns pointer to stack that will be released to the user
+	- if no processes/threads, return -1, else sleep, wait for children proccesses/threads to finish
 # Chap 5 Synchronisation  
 
 # Chap 6 File Systems  
