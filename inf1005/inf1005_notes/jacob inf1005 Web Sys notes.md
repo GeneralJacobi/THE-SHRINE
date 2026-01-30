@@ -404,3 +404,49 @@ open using F12 inspect, elements tab
 
 
 ## TypeScript
+
+
+# Chap 4 Web Accessibility and testing
+
+## W3C Web accessibility Initiative
+
+pre 2000
+IE and netscape fighting, didnt care for standardisation
+Developers  have to cook up funky javascript for netscape or for IE
+Webpages may not work the same on diff browsers
+
+
+- W3C overview
+	- Who governs web
+		- is the body set standands for browser maker and developers to follow
+		- if both follow standard, all browsers work with all pages
+- Web Standards
+- Validating Web Pages
+	- W3C Markup validation service
+	- made to promote / make easier for people to follow the standard
+	- can take public domain names
+	- can take source code
+
+## Web Content Accessibility
+- Four principles (POUR)
+	- Perceivable
+		- Provide Text alternative for non-text content
+		- Provide captions & other alternatives for multimedia
+		- Create content that can be presented in different ways including assistive technologies w/o losing meaning
+		- Make it easier to see and hear content (e.g. font size)
+	- Operable
+		- Make all functionality available from keyboard
+		- Give users enough time to read and use content
+		- Do not use content that can induce seizures or physical reactions
+		- Help users navigate and find content
+		- Make it easier to use inputs other than keyboard
+	- Understandable
+		- Make text readable / understandable
+		- Make content appear and operate in predictable ways
+		- Help users avoid and correct mistakes
+	- Robust
+
+
+## Accessibility Testing Tools
+- deque's axe browser plugin
+- used to test website for WCAG POUR
