@@ -409,8 +409,8 @@ class Van{
 
 
 ## Interfaces
-Resticts which classes can call interface methods
+Is like a layer 2 switch in the way that only those "plugged" into the switch by implementing the interface must define methods declared in the interface and can call those methods
 
 e.g. iMovable interface
-each object implements IMovable
-only owner of interface can call movement method
+each class that implements iMovable must define each method in iMovable
+any class that implements iMovable can call the methods declared in the interface
