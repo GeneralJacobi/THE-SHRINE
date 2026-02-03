@@ -373,6 +373,12 @@ static method can be like check if obj is active then set val
 
 default methods can be overridden, static cannot
 
+Is like a layer 2 switch in the way that only those "plugged" into the switch by implementing the interface must define methods declared in the interface and can call those methods
+
+e.g. iMovable interface
+each class that implements iMovable must define each method in iMovable
+any class that implements iMovable can call the methods declared in the interface
+
 
 ### Relationships
 | Relationship | Meaning                        |                                                                                                                                                                      |
@@ -408,9 +414,28 @@ class Van{
 }
 
 
-## Interfaces
-Is like a layer 2 switch in the way that only those "plugged" into the switch by implementing the interface must define methods declared in the interface and can call those methods
+## Wk 5
 
-e.g. iMovable interface
-each class that implements iMovable must define each method in iMovable
-any class that implements iMovable can call the methods declared in the interface
+### Assignement of Variables
+
+Value
+- for primitives like int, char
+Reference
+- pointers
+- for instanced objects
+
+
+### Cloning
+Is not inheritance
+is not creating obj with new keyword
+is not serialisation
+#### Shallow Clone
+
+Two pointers to same underlying object
+if either makes change, other can see
+
+#### Deep Clone
+
+2nd pointer points to ca new mem addr with copy of data from 1st pointer
+
+

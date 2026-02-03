@@ -163,8 +163,8 @@ can pc a ping pc c - no
 can pc b ping pc c - no
 
 if no why
-because default gateway is 192.168.10.1, so cannnot ping 192.168.20.3
-diff subbnet
+because default gateway is 192.168.10.1, so cannot ping 192.168.20.3
+diff subnet
 
 what is default vlan
 vlan 1

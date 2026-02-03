@@ -1755,6 +1755,231 @@ how to close threads
 	- if no processes/threads, return -1, else sleep, wait for children proccesses/threads to finish
 # Chap 5 Synchronisation  
 
+### What is CPU scheduling
+OS decision-making processes for selecting which process runs on CPU when multiple processes ready
+part of process management
+ensure efficient use of CPU
+
+|     | Teacher keep going | Teacher decide |     |     |
+| --- | ------------------ | -------------- | --- | --- |
+|     |                    |                |     |     |
+
+### Why need schedule
+
+Ensure CPU used efficiently, fairly, responsively
+- Efficiency - keep CPU busy, minimize idle time
+- Fairness - every process gets chance to run, avoid starving any one processes
+- Responsiveness - interactive tasks get quick attention (typing, clicking)
+- Balance - diff workloads handled appropriately
+### How schedule
+
+| CPU-IO Burst Cycle<br>- Process execution consists of cycle of CPU execution and I/O wait<br>- is CPU burst followed by I/O burst<br><br><br>                     | ![[cpu_burst_cycle.png]]     |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| CPU burst main concern<br>- many short CPU burst vs few long CPU bursts<br>- I/O bound process = many short CPU burst<br>- CPU bound process= few long CPU bursts | ![[cpu-burst-histogram.png]] |
+
+### Long- Medium- Short- term scheduling
+
+| Long-term                                                                                                                                                                                                                                      | Medium-term                                                                                                                                                                                                                                                                                       | Short-term                                                                                                                                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| chooses <br>- which programs admitted to system for processing<br>- when to create new process<br>- degree of multiprogramming<br>- % of time per process (more processes; smaller % of time alloc-ed)<br><br>Strives for good process mix<br> | is part of swapping function (swapping processes in and out of mem)<br><br>Based on need to managed degree of multiproramming<br><br>May remove processes from memory, store on disk, bring back rom disk to continue execution<br>- may impact performance as main mem faster then secondary mem | invoked frequently<br><br>responsible for context switching<br><br>strive to maximise CPU utilisation + throughput<br><br>Load balancing for muli-core architectures<br><br>is adaptable????<br><br>selects among ready queue |
+#### Context Switching
+
+processes of saving state of running-proc and loading state of another proc
+Enables multitasking and CPU scheduling
+- process preemption
+- interrupts
+However, increases overheads as loadng state takes time and CPU is not running
+
+### Ready queue
+scheduling decisions occur when process
+1. Switches from running to waiting
+2. Terminates
+3. Switches from running to ready
+4. Switches from waiting to ready
+1 and 2 are non-preemptive / cooperative
+- process keeps CPU until release by terminate / switch to waiting
+3 and 4 are pre-emptive
+
+### CPU dispatcher
+assigns control of CPU to process (selected by short-term scheduler)
+involves: 
+- switching context
+- switching to user mode
+- jump to proper location in user program, continue
+
+Dispatch latency
+- time taken for dispatcher to stop proc a and start proc b
+
+Scheduler and dispatcher used tgt
+- Scheduler select, dispatcher alloc CPU
+
+
+### Pre-empting
+A running process can be interrupted and moved back to the ready queue if a higher-  
+priority or shorter job arrives
+Better responsiveness, fairer for interactive systems
+Higher overhead due to frequent context switches
+e.g. Round Robin, SRTF, Preemptive Priority
+
+Non-preemptive scheduling is simpler but less practical in real-world OS design
+Once a process starts running, it cannot be interrupted until completion or voluntary  
+release
+Simple, less overhead
+Poor responsiveness, risk of long waiting times for short jobs
+e.g. FCFS, SJF, Priority
+
+CPU looks to switch processes out to run others (pre-emptive)
+Proc holds on to CPU until it releases (non-pre-emptive)
+
+### Scheduling crieria
+
+| CPU utilisation                                         | Throughput                                                                       | Turnaround time                                                                                                                                                                                                                                                                                                | Waiting time                                    | Response time                                                                        |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------ |
+| aim to Maximise<br><br>keep the CPU as busy as possible | aim to Maximise<br><br>number of processes that complete execution per time unit | aim to minimise<br><br>time to exec proc (time of submission to dispatch, time of completion)<br>- time in mem<br>- time in ready queue<br>- time on CPU/IO<br><br>In an interactive system, turnaround time may not be the best criterion<br><br>turnaround time is limited by the speed of the output device | aim to minimise<br><br>time proc in ready queue | aim to minimise<br><br>time from req submitted to 1st response produced (not output) |
+### Types of scheduling algos
+
+| Shortest Job First (SJF)                                                                                                                                                             | Shortest Remaining time first                                                                                                                                   | First come, first served (FCFS)                                                                                                                                                                                                                                                               | Priority                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Round Robin (RR)                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| - Select proc w/ shortest CPU time<br>- Optimal avg waiting time<br>- Require burst prediction<br>- Risk starving longer CPU time procs if keep adding short CPU time procs to queue | - Select proc w/ least remaining CPU burst time<br>- preemptive version of SJK<br>- Optimal avg waiting time<br>- req accurate estimate of remaining burst time | - Simplest<br>- Proc that req first alloced first<br>- implementation easily managed w/ FIFO queue<br>- avg waiting time quite long<br><br>- Proc enters ready queue<br>- Proc PCB linked to tail of queue<br>- When CPU free, run proc at head of queue<br>- running proc removed from queue | - Priority int assigned to each proc<br>- CPU runs proc w/ highest priority (smallest int)<br><br>Pre-emptive ver.<br>- Will preempt CPU if priority of newly arrived process higher than priority of running proc<br><br>SJF is special case, Priority inverse of predicted next CPU burst time<br>(greater CPU burst time =  lower priority)<br><br>runs risk of starvation if high priority processes frequently added to queue<br>need use aging to solve (as time proc waiting in ready queue increase, increase Priority of that proc) | - each proc gets small unit  of CPU time (called time quantum *q*)<br>-after *q* elapsed, preempt proc, added to end of ready queue<br><br>if n procs in ready queue and time quantum *q*, each proc gets 1/n of CPU time in chunks of at most *q* times<br>No proc waits > (n-1)q time units<br><br>Designed for time-sharing systems<br><br>Performance may be impacted<br>- *q* large -> FIFO<br>- *q* small -> must be arge enough w/ respect to context switch, large overhead |
+
+#### Advanced Scheduling algo
+
+| Multilevel Queue Scheduling (MLQ)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Multilevel Feedback Queue (MLFQ)                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Linux’s Completely Fair Scheduler (CFS)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ready queue is partitioned into separate queues, for example<br>▪ Foreground (interactive)  <br>▪ Background (batch)<br><br>Process permanently in a given queue<br>Each queue has its own scheduling algorithm<br>▪ Foreground – RR  <br>▪ Background – FCFS<br><br>Scheduling must be done between the queue<br>▪ Fixed priority scheduling; (i.e., serve all from  <br>foreground then from background).  <br>▪ Possibility of starvation for background  <br>processes  <br>▪ Time slice – each queue gets a certain amount  <br>of CPU time which it can schedule amongst its processes; i.e.,  <br>• 80% to foreground in RR  <br>• 20% to background in FCFS<br><br>![[MLQ-queues.png]] | A process can move between the various queues<br>aging can be implemented this way<br><br>Multilevel-feedback-queue scheduler defined by the  <br>following parameters:  <br>▪ number of queues  <br>▪ scheduling algorithms for each queue  <br>▪ method used to determine when to upgrade a process  <br>▪ method used to determine when to demote a process  <br>▪ method used to determine which queue a process will  <br>enter when that process needs service<br><br>![[MLQF.png]] | Based on proportional fairness  <br>▪ Each process gets CPU time proportional to its weight  <br>▪ Uses a red-black tree to track runnable processes  <br>▪ Fair distribution of CPU time; scalable to many processes  <br>▪ More complex than classical algorithms<br><br><br>Scheduling classes  <br>▪ Each has specific priority  <br>▪ Scheduler picks highest priority task in highest scheduling class  <br>▪ Rather than quantum based on fixed time allotments, based on proportion  <br>of CPU time  <br>▪ 2 scheduling classes included, others can be added  <br>1. default  <br>2. real-time  <br>▪ Quantum calculated based on nice value from -20 to +19  <br>▪ Lower value is higher priority  <br>▪ Calculates target latency – interval of time during which task should run at  <br>least once  <br>▪ Target latency can increase if say number of active tasks increases  <br>▪ CFS scheduler maintains per task virtual run time in variable vruntime  <br>▪ Associated with decay factor based on priority of task – lower priority is  <br>higher decay rate  <br>▪ Normal default priority yields virtual run time = actual run time. E.g. a task  <br>with default priority runs for 200ms, its vruntime is 200ms, a task with lower  <br>priority run will have vruntime higher than 200ms, a task with higher priority  <br>will have vruntime less than 200ms  <br>▪ To decide next task to run, scheduler picks task with lowest virtual run time<br><br>![[Completely-fair-scheduler.png]]<br><br><br><br>Real-time scheduling according to POSIX.1b  <br>▪ Real-time tasks have static priorities  <br>▪ Real-time plus normal map into global priority scheme  <br>▪ Nice value of -20 maps to global priority 100  <br>▪ Nice value of +19 maps to priority 139<br><br>![[Completely-fair-scheduler-2.png]]<br> |
+
+
+#### Gnatt chart
+ ![[gnatt-chart.png]]
+
+#### Convoy Effect
+When a long process holds the CPU, shorter processes pile up behind it
+Increases waiting time for short jobs, reduces system responsiveness
+short procs behind long procs result in longer avg waiting time
+
+#### Starvation (Indefinite Blocking)  
+▪ A process waits indefinitely because higher-priority processes keep getting scheduled  
+▪ Priority scheduling without aging  
+▪ Some processes may never execute  
+▪ Aging – gradually increasing the priority of waiting processe
+
+#### Thrashing  
+▪ Excessive context switching due to small time quantum or paging activity  
+▪ CPU spends more time switching than executing resulting in unresponsive system  
+▪ CPU utilization drops sharply
+
+## xv6 scheduling
+
+implements short-term scheduler
+medium/long term implicit/ommited by design
+admission of proc to queue driven by user action / system call
+- fork() make proc
+- exec() load program
+- kernel admit if have free slot in proc table (NPROC)
+- if full, fork() fail
+no swapping / mem-based suspension (no medium-term)
+
+short term scheduling: 
+- scan proc table for runnable
+- choose 1
+- use dispatcher for context switch
+
+other OS-es schedule diff procs directly from kernel space
+
+xv6 scheduler is own proc and has own thread
+means need switch to scheduler proc from running proc then switch back
+
+### xv6 short-term scheduling sequence of events
+![[xv6-short-term-scheduling.png]]
+
+#### Timer Interrupt *usertrap()*
+xv6 triggering preemption
+
+- RISC-V timer hardware generate interrupt periodically whle proc running
+- scause register gets val from timer interrupt (as reason for interrupt)
+- Trampoline.s save user state in trapframe
+- Proc move to kernel state
+- user-mode trap handler (trap.c) check if is timer interrupt; return control to scheduler with *yeild()*
+- enforce preemptive, ensure no single proc monopolise CPU
+
+#### Current Process yields CPU *yield()*
+
+proc may voluntarily give up CPU / force to give up by timer
+
+*yield()* in proc.c transition proc to RUNNABLE state
+then switch back to scheduler context/proc using *sched()*
+
+xv6 hold *p->lock* across context switch
+this prevents other processes from attempting to use the current CPU
+important as MUST switch to scheduler proc first to choose next proc
+hence, *yield()* is bridge from running proc to scheduler proc, enforcing clean state transition and correct locking
+
+another one is if 2 CPUs see process A is RUNABLE at the same time, both will call swtch() and whichever is first will lock process A, causing the later CPU to be unable to lock and go back to scanning
+
+#### Performs Context Switch *swtch()*
+swtch() updates registers and data structs to change the kernel process execution context (kernel space stack, registers)
+
+swtch(&p->context, &mycpu()->context)    &p->context : a0    &mycpu()->context : a1
+Save kernel registers that need to be used later (ra, sp, s0..s11) to context structure and restore the scheduler
+
+swtch.s saves old context + restore new context at asm level
+save from old context and load from new context:
+- return addr (ra)
+- stack pointer (sp)
+- frame pointer (s0)
+- callee-saved registers (s1-s11) 
+then return to new exec point
+
+time taken to do this is dispatch latency
+#### Choose next RUNNABLE process *scheduler()*
+xv6 triggering preemption
+
+on boot
+scheduler() is called inside main() in main.c after setting up memory, devices and init
+scheduler() implements a simple Round Robin policy by iterating the process table
+
+once in scheduler proc,
+Each CPU runs infinite loop in scheduler() in proc.c that scans for RUNNABLE processes
+finds a RUNNABLE process, mark it RUNNING, and dispatch via swtch()
+once return from proc (be it through interrupt or yield), back in the loop, look for next runnable
+
+#### Perform Context Switch *swtch()* \[again]
+#### Exec next process
+
+### Overall look
+
+start `main()` from main.c
+call `init()` from init.c
+start `scheduler()` from proc.c
+- scheduler proc check if procXX == RUNABLE
+	- call `swtch(&mycpu()->context, procXX->context);`  switch to procXX
+	- run procXX
+	- \[SCHEDULING EVENT]:  `exit()` OR `sleep()` OR timer interrupt
+		- scheduling event causes `usertrap()` from trampoline.s and trap.c
+			-  calls `yield()`
+				- `acquire(myproc()-> lock)`
+				- `myproc()->state = RUNABLE`
+				- `sched()`
+					- `swtch()`; switch to scheduler proc
+					- after `swtch()`, go back to `yield()`
+				- `release(myproc()->lock)`
+				- after release, jumps to scheduler proc as last `swtch()` context was to scheduler
+
+## How many procs can run concurrently in xv6
+
+param.h dictates global constants; including process limits, buffer sizes ect.
+NPROC = max num processes in system
+NCPU = num CPUs xv6 supports
+- each CPU runs own `scheduler()` loop
+- more CPU = more `scheduler()` = more processes scheduled simultaneously
+### other qns this lec
+paging is seperating out and only loading partial parts of the process from secondary mem to main mem, useful if proc is very large but only have small amount of mem
+e.g.
+16Gb process
+1Gb ram
+load certain parts into ram with paging and offset
+
+
 # Chap 6 File Systems  
 
 # Chap 7 Mem Management  
