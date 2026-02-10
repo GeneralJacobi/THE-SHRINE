@@ -1,6 +1,19 @@
 
 ## Wk1
-Java
+
+### Pillars of OOP
+- Encapsulation
+	- Hide mess
+	- Secures data
+	- Restricts Access
+- Inheritance
+- Polymorphism
+	- The capability of a single method to operate on different types of objects
+	- Allows same method name to behave differently based on object it is acting upon
+- Abstrction
+
+
+### Java
 
 start w/ class definition & main method as entry
 emphasise OOP nature
@@ -60,6 +73,7 @@ student s = new Student("Nisha",3);
 // s.year == 3
 
 UML diagram for this class:  
+
 |Student|
 |-|
 |+ name|
@@ -233,19 +247,19 @@ list.remove(0) will automatically shift all indexes down
 
 
 ### SOLID BIRD BIRD
-- The Single Responsibility Principle  
+- Single Responsibility Principle  
 	- A class should only have one job / reason to change
 	- e.g a report class that generates, formats and prints a report does not follow this principle
 	- shld have Report class, ReportGenerator class, ReportFormatter, Report Printer
 	- This way if anythign changes only one class is changed
-- The Open-Closed Principle  
+- Open-Closed Principle  
 	- Open for extension, Closed for modification
 	- PaymentService Class (Closed)
 	- UPIPayment, CardPayment, Wallet Payment
 	- each extends from payment service but is different based on exactly how they pay
-- The Liskov Substitution Principle  
-- The Interface Segregation Principle  
-- The Dependency Inversion Principle
+- Liskov Substitution Principle  
+- Interface Segregation Principle  
+- Dependency Inversion Principle
 
 ### Encapsulation
 Hide mess
@@ -256,6 +270,16 @@ Hide mess
 Secures data
 Restricts Access
 
+Advantages of Encapsulation
+- Maintainability
+	- dev can use code w/o knowing how it works
+	- can send input, know input range and return value
+- Security
+	- Control access to data
+	- Provide layer of security to code
+- Extensibility
+	- Code modularity grouping related data and behavior within class. 
+	- update can be made by changing the encapsulation part w/o changing input and output format
 
 Safe Control Access
 - Public getter function returns value of private var
@@ -270,12 +294,14 @@ UML diagrams
 
 SOLID principles helps you write code that doesnt explode when you add new features
 
-
 ## Wk 3
 
 ### Inheritance
+Derive new class from existing one
+allow classes to use properties and behaviors from other classes
 
-Parent Class's variables are copied to child class (not by values, just same name)
+Parent class's variables are copied to child class (not by values, just same name)
+Parent class's constructor is not inherited. they can be called tho with super() and should be called in child constructor
 Child class can access Parent Class's variables if that already have a value
 Child class's variables only exist within child class and parent cannot access.
 
@@ -381,14 +407,19 @@ any class that implements iMovable can call the methods declared in the interfac
 
 
 ### Relationships
-| Relationship | Meaning                        |                                                                                                                                                                      |
-| ------------ | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Inheritance  | Parent -> Child(is-a)          | "I got it from my mom"<br>Dog extends Animal means Dog is an animal<br>Student extends person means Student is a person                                              |
-| Association  | Connected but independent      | "We talk somtimes"                                                                                                                                                   |
-| Aggregation  | Has-a<br>parts are independent | "Group project but each lives own lives"<br>Library is collection of books yet  each book is unique                                                                  |
-| Composition  | Has-a<br>Parts are dependent   | "We die together"<br>If object A exists, object B will also exist<br>Book has pages, without pages, book does not exist, without book, pages of that book dont exist |
-| Dependency   | Temporary Use                  | "A quick situationship"<br>Student study in Library, both can exist without the other yet, in order to study, the student is dependent on the library                |
+| Relationship | Meaning                                     |                                                                                                                                                                      |
+| ------------ | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Inheritance  | Parent -> Child<br>(is-a)                   | "I got it from my mom"<br>Dog extends Animal means Dog is an animal<br>Student extends person means Student is a person                                              |
+| Association  | Connected but independent                   | "We talk somtimes"                                                                                                                                                   |
+| Aggregation  | Has-a<br>parts are independent<br>weak link | "Group project but each lives own lives"<br>Library is collection of books yet  each book is unique                                                                  |
+| Composition  | Has-a<br>Parts are dependent<br>strong link | "We die together"<br>If object A exists, object B will also exist<br>Book has pages, without pages, book does not exist, without book, pages of that book dont exist |
+| Dependency   | Temporary Use                               | "A quick situationship"<br>Student study in Library, both can exist without the other yet, in order to study, the student is dependent on the library                |
 
+purpose
+- Model Real World scenarios
+- Class is a basic unit
+- multiple classes and objects
+- several connections and interactions
 #### E.g.
 class Engine{
 	private int horsePower;
@@ -416,7 +447,33 @@ class Van{
 
 ## Wk 5
 
-### Assignement of Variables
+## Error Handling
+goal is to ensure prog behaves gracefully in the presence of errors & not crash / produce incorrect results
+
+handling is how developers manage errors or exceptional situations that may occur during execution or program
+
+exception represents abnormal conditions or unexpected events that can disrupt normal flow of program
+
+when exception occurs, raised / thrown
+when exception detected, handled / caught
+block of code that detects and deals with exceptions = exception handler
+
+## Error handling in java
+try
+catch(optional exception type)
+finally
+![[error_handling.png]]
+
+## Exception types
+
+| Checked Exceptions     | Unchecked Exceptions            |
+| ---------------------- | ------------------------------- |
+| IOException            | Arithmetic Exception            |
+| SQLException           | NullPointer Exception           |
+| ClassNotFoundException | ArrayIndexOutOfBounds Exception |
+
+
+### Assignment of Variables
 
 Value
 - for primitives like int, char
@@ -433,9 +490,16 @@ is not serialisation
 
 Two pointers to same underlying object
 if either makes change, other can see
+pointers in cloned object have the same value as original object pointer
+e.g. employee has pointer to dept obj
+clone of employee obj will point to same dept object even tho clone has own mem can values
 
 #### Deep Clone
 
 2nd pointer points to ca new mem addr with copy of data from 1st pointer
+pointers in cloned object do not have the same value as original object pointer
+e.g. employee has pointer to dept obj
+clone of employee obj will point to new dept object
 
+# Wk 6
 

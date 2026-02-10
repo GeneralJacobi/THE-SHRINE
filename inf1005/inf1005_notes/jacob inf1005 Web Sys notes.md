@@ -441,11 +441,29 @@ Webpages may not work the same on diff browsers
 # Chap 5 Serverside web dev PHP
 
 Some servers only return files  e.g, send html then .css then .js
-those do not process any logic, all done by browserr software
+those do not process any logic, all done by browser software
+
+PHP Hypertext Preproccessor
 
 Extensions that use php files require server to process logic as browser does not have ability to process raw php file
-so server processes logic and makes / fetches correct html andor css andor js
+so server processes logic and makes / fetches correct html and/or css and/or js
 
+can use echo() to execute string to html e.g. echo "\<h1>hello world\</h1>"
+
+others
+• ASP (Active Server Pages). This was Microsoft’s first server-side technology (also called ASP Classic).  
+• ASP.NET. This replaced Microsoft’s older ASP technology.  
+• JSP (Java Server Pages). JSP uses Java as its programming language and like ASP.NET it uses an explicit  
+object-oriented approach and is used in large enterprise web systems and is integrated into the J2EE  
+environment.  
+• Node.js (or just Node). Uses JavaScript on the server side  
+• Perl. excels in the manipulation of text.  
+• PHP. Like ASP, PHP is a dynamically typed language that can be embedded directly within the HTML  
+• Python. This terse, object-oriented programming language has many uses, including being used to create web  
+applications.  
+• Ruby on Rails. This is a web development framework that uses the Ruby programming language
+
+## PHP
 advantage
 - secret / security 
 - cross platform compatibility (php chooses correct format to display)
@@ -462,3 +480,202 @@ disadvantage
 
 php made from perl made from C so similar syntax, easier to learn
 php has many existing examples, easy to find examples or implementations
+
+PHP is dynamically typed w/ optional static typing
+- boolean
+- int
+- float
+- string
+- array (any type)
+	- actually ordered map
+	- each val has key
+	- like python dict
+	- keys are innt by default and start from 0 like other langs like normal
+	- unless explicitly defined by using =>, "KEY" => VAL, KEY => VAL
+	- multidimensional arrays work too
+	- array var needs \[] after name
+- objects
+
+## Php code
+PHP can embed directly into html, will have .php extension
+Code must be contained in tag; start with \<?php end with ?>
+Code in tags interpreted and executed, code outside tag sent to client raw
+uses JS style commenting
+
+PHP constants use define(); args name of const and value
+Once defined no need $ to reference const
+other vars need $ to define and reference
+
+echo() to output to console
+use "." to concatenate
+
+printf() exists, works like C but vars must reference with $
+if else same format as C condition in () and html code in {}
+	alt syntax replace brackets with endif tag
+	kinda trash tho
+switch case condition in () cases in {} with each case after :
+while same as c
+do while same as c
+for
+
+include "";    //    include_once "";    //    require "";    //    require_once "";
+
+define funcs format
+	`function FUNC_NAME($parameter){`
+	`code;`
+	`}`
+ and if need explicit return type (implemented in php 7.0)
+	 `function FUNC_NAME($parameter) : RETURN_TYPE{`
+	`code;`
+	`}`
+and if need default value
+`function FUNC_NAME($parameter = VALUE){`
+	`code;`
+	`}`
+ 
+use & to pass value by reference
+
+iterate through array like normal with while, for and foreach loop
+can add to array with exact index or empty \[] to add to end of array
+delete explicitly elements with unset()
+check if val in array with isset()
+
+define class
+`class CLASS_NAME {`
+	`public $SOME_VAR;`
+	`private $SOME_VAR_2;`
+	`protected $SOME_VAR_3;`
+	`function __construct($some_param){`
+	`}`
+	`public function SOME_METHOD($some_param_2){`
+	`}`
+`}`
+
+use `new` to instantiate obj
+access object properties with `->`; e.g. `$Student->name`
+constructor must be declared per class like OOP
+methods same as java OOP
+extends like Java for inheritance
+
+PHP special predefined associative arrays \[superglobal arrays]
+allows access to HTTP headers, query string params, other impt http shit
+
+| $GLOBAL                                             | $\_COOKIES                                           | $\_ENV                           | $\_FILES                                   | $\_GET                                                      | $\_POST                                                             | $\_REQUEST                                                          | $\_SESSIONS                      | $\_SERVER                                                     |
+| --------------------------------------------------- | ---------------------------------------------------- | -------------------------------- | ------------------------------------------ | ----------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------- |
+| Array for storing data that needs superglobal scope | Array of cookie data passed to page via HTTP request | Array of server environment data | Array of file items uploaded to the server | Array of query string data passed to the server via the URL | Array of query string data passed to the server via the HTTP header | Array containing the contents of \$\_GET, \$\_POST, and \$\_COOKIES | Array that contains session data | Array containing information about the request and the server |
+### flow of \$\_GET array
+![[get_array.png]]
+
+### flow of \$\_POST array
+![[post_array.png]]
+
+### \$\_POST detection
+![[post_detecction.png]]
+
+### jQuery strings in hyperlinks
+![[query_in_link.png]]
+important to actively distrust all user input
+need to sanitize
+![[sanatize.png]]
+
+## Http header
+PHP can use to add content after HTTP response header but can also modify response header using header() function to create ability to redirect using location header or set content-type header
+
+### redirect
+![[redirection.png]]
+
+### content type
+The Content-Type HTTP header is used to tell the browser what type of content (using a MIME type) it is receiving in the response.  
+
+Normally, the PHP environment automatically sets this header to text/html.  
+
+However, you might want to change this header value.
+2 common examples are:  
+• Returning JSON Data  
+• Outputting Custom Images
+
+
+# Wk 6 Form Processing with HML5 and PHP
+
+## Client-Side form validation
+Validation can be done by HTML5 or Java script
+Bootstrap has responsive forms with javascript
+Even though Java script gives better experience, it cannot be relied on
+
+html5 can be trusted a bit more as it has ways to limit inputs to forms
+e.g. 
+- limit  to 45 chars w/ maxlength attribute
+	- avoid buffer overflow attack
+	- optimize for storage reasons
+- create mandatory field w/ required attribute
+- create mandatory format w/ type attribute
+	- e.g. type="email"; checks for @ symbol, but not for .com
+	- type="password"
+
+other libraries required for more complex validation e.g. validation for password complexity
+
+sanatize may change input value
+validation does not
+## Server-side form validation & sanitisation
+
+### POST vs GET
+
+post sends data to server
+format ?????????????????????????????????????????????//
+
+implement with method attribute e.g. method = "post"
+
+get puts data into page on client side
+
+has ways to detect if form request failed and php is displayed by itself, can do error handling
+
+| Advantage                                          | Disadvantage                        |
+| -------------------------------------------------- | ----------------------------------- |
+| Passes data without changing clientside hyper-link | Not encrypted                       |
+|                                                    | can be intercepted unless SSL HTTPS |
+
+
+### Security Concern -- XSS & SQL Injection
+
+### filter_var()
+sanitize + validate
+
+has multiple flags
+FILTER_VALIDATE_EMAIL flag checks against known email format pattern
+return true if match, false if not match
+### htmlspecialchars()
+remove html tag things
+
+### trim()
+trim whitespace, tabs, newlines, breaks
+
+### stripslashes
+remove / and  \
+
+## Security
+Why do both?
+Client-side can bypass
+server-side cannot
+
+
+## Lab shit
+
+`if(!empty(\$\_POST("frame")){`
+
+`}`
+
+`function sanitise_input($data){`
+`	$data = trim($data)`
+`	$data = stripslashes($data)`
+`	$data = htmlspecialchars($data)`
+`	return $data`
+`}`
+
+
+
+
+`$pwd_hashed = password_hash($_POST("pwd"), PASSWORD_DEFAULT);`
+
+shld not sanitize password, special chars allowed
+never display or store as plaintext, always hash
+# Wk7

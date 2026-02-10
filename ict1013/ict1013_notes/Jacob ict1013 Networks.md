@@ -53,8 +53,8 @@ Submissions to drop box
 
 Details
 - physical building
-	- 4 levels
-		- Lvl 4:
+	- 4 levels: total 74 ports
+		- Lvl 4: 35 ports
 			- Country manager office
 				- 1x country manager
 				- 1x Dy country manager
@@ -65,7 +65,7 @@ Details
 			- Large meeting room
 				- 28 ports
 			- 1x network engineer 
-		- Lvl 3
+		- Lvl 3: 7 ports
 			- Solution Dev Dept
 				- 1x Solution Manager
 				- 2x Senior Software devs
@@ -75,14 +75,14 @@ Details
 				- 1x network engineer
 			- Server Room
 			- 1x HR executive
-		- Lvl 2
+		- Lvl 2: 12 ports
 			- Marketing & Sales Dept
 				- 1x Sales manager
 				- 1x Dy sales manager
 				- 8x sales executives
 			- 1x HR exceutive
 			- 1x Network engineer
-		- Lvl 1
+		- Lvl 1: 20 ports
 			- Customer Service dept
 				- 1x Service Manager
 				- 1x Dy Service Manager
@@ -731,6 +731,16 @@ Notes
 	- ip header remains the same throughout all hops to reach receiver
 
 # Topic 6 | Data Link Layer IV / Network Layer IV : Network Design II, EtherChannel, STP and HSRP
+## Failure Domain
+part of network that is impacted when specific network devices fail
+
+redundancy can mitigate by providing alternate routes
+minimizes failure domain
+improve network availability
+
+## Redundancy
+achieved by:
+multiple links from each access switch to diff distribution switch
 
 
 # Topic 7 | Network Layer V : Static Routing and Dynamic Routing Protocols

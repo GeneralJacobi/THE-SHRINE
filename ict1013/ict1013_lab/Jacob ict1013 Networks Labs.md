@@ -134,6 +134,7 @@ Router commands
 
 ## Lab 4
 
+### Cmds
 in enable mode
 - show interfaces
 	- trunk - show trunking interfaces and allowed vlans
@@ -142,12 +143,17 @@ in config mode
 - name \[string] - name current vlan with \[string]; if last cmd was vlan 10, next name will name vlan 10
 - no vlan \[ID num] - removes vlan \[ID num] from vlan interface
 in interface config for specific port (e.g. g1/0/06 or range g1/0/11-24)
+- encapsulation dot1q \[vlan id]
 - switchport 
 	- mode
 		- access - statically disables trunking on the port(s), default mode is dynamic trunk
 			- access vlan 10 - changes port(s) to only allow access to vlan 10; using no before this changes access vlan to default vlan (does not require vlan num)
 		- trunk - statically changes mode to trunk; default trunking mode is  auto
 			- trunk allow vlan - allows trunk to use vlan
+	- trunk
+		- allowed
+			- vlan
+				- add \[vlan id];    allows that vlan to use that trunk
 - no shut - changes interface status to up
 - switchport mode dynamic negotiate - switches port mode to dynamic trunk negotiate (default is auto)
 - switchport trunk - allows vlan access to trunk but  like how tho????
@@ -157,7 +163,7 @@ note
 - dynamic trunking protocol allows port to negotiate trunk mode, but it waits for others to initiate
 
 
-
+### Lab qns
 can pc a ping pc b - yes
 can pc a ping pc c - no
 can pc b ping pc c - no
@@ -506,3 +512,50 @@ What are the port priorities in the BPDUs captured at PC-A, PC-B and PC-C? Why
 	- prio 128
 	- port 12
 	- to bridge
+
+### part d
+
+##### Cmd
+
+after selecting VLAN,
+
+- standby
+	- version \[id];  use version 2
+	- \[group id] ip xxx.xxx.xxx.xxx;    set virtual ip address for this group
+	- \[group id] priority;    set preempt priority to determine active router
+	- \[group id] preempt;    enable preempting
+
+- show
+	- standby brief
+- tracert
+
+#### Lab qn
+
+can ping? yes
+
+how many hops? 2 hops
+
+what happens to ping traffic when DSW1 all ports unplugged
+unable to reach
+
+
+based on output
+which is active router?    DSW1
+What is MAC address for virtual IP address?  0000.0c9f.f001
+IP addr and priorit of standby router?    192.168.10.2, prio 100
+
+change default gateway, what addr to use?   virtual ip addr of that VLAN  192.168.10.254 / 192.168.20.254
+
+can ping A->B?    yes
+
+As the ping continues, disconnect the Ethernet cables on DSW1 interfaces G1/0/1, G1/0/2 and G1/0/12.  
+Did the ping traffic resume automatically after a short break?    yes, once DSW2 HSRP kicks in
+
+While DSW1 disconnected which is active router?    DSW2
+
+Reconnected, now who active?    remains as DSW2 with or without traffic
+
+after preempt
+Which router is the active router?    DSW1 has become active route based on priority
+
+Why would there be a need for redundancy in a LAN? To ensure end users connection not interrupted in case of fault; i.e. fault tolerance and maximize availability

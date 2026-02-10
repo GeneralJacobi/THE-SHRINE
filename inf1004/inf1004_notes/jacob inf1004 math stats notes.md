@@ -803,3 +803,83 @@ steps:
 		- Variability: the degree to which data points vary
 1. Collect data appropriate for that parameter
 2. Make inferences about that value of the parameter
+
+# Chap 6
+
+## Formula
+
+Sample mean $\bar{x}$ = Pop mean $\mu$
+
+Sample standard deviation $s$ = pop standard variation / sqrt(num samples) $\frac{\sigma}{\sqrt{n}}$
+
+Sample variance $s^2$ = pop variance / sqrt(num samples) $\frac{\sigma^2}{\sqrt{n}}$
+
+## Sampling Methods
+
+### Probability sampling
+- Simple Random Sampling
+	- use random numbers / selection to ensure every member of pop has equal chance of selection
+	- Sample should be representative of population
+- Systematic Sampling
+	- members placed in a certain order,  select from random starting point and skip constant interval to select others
+- Cluster Sampling
+	- divide pop into cluster, select randomly from one or more randomly selected clusters
+- Stratified Sampling
+	- pop divided into different strata / subgroups
+	- random sampling done on each group
+
+### Non-probability sampling
+Does not ensure every member of population has equal chance of being selected
+
+- Convenience Sampling
+- Self-selected Sampling
+	- biased in favor of those with strong opinions
+
+## Inferring from samples
+
+since values vary from sample to sample, expect to calculate sample statistics
+
+Random variable is the sample statistic (e.g. sample mean)
+thus can construct a distribution for this sample statistic (called sampling distribution)
+
+Sample mean = Pop mean
+
+Sample variance = sqrt(pop variance)
+## Central Limit Theorem
+
+As sampling size increases, distribution of sampling means approaches the normal distribution regardless of distribution of parent pop
+
+when n>=30, samplemean is approximatly normally distributed
+
+$\bar{x} = \mu$
+$\sigma_\bar{x}  = \frac{\sigma}{\sqrt{n}}$
+also, therefore $\sigma_\bar{x}^2  = \frac{\sigma^2}{\sqrt{n}}$
+
+$Z < \frac{\bar{x} - \mu}{\sigma/\sqrt{n}}$
+$t = \frac{\bar{x} - \mu}{s/\sqrt{n}}$
+
+degree of freedom = num_samples - 1
+
+P(t > t\*) = p
+e.g. P(t>0.025) = read from t-table
+
+T-distribution used when n < 30 as sample size not big enough to truly approxminate normal distribution and is affected by degrees of freedom
+
+Z-distribution not affected by degrees of freedom
+
+# Chap 7
+
+
+
+
+
+# Chap 8
+
+
+
+# Chap 9
+
+
+
+
+# Chap 10

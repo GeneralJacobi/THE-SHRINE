@@ -1496,7 +1496,6 @@ on fork() kernel invokes allocproc to alloc new process struct for child process
 
 
 ????????????????????????????///
-# Chap 4 CPU Scheduling  
 
 ## Process vs thread
 - process can fork which makes new process w/ clone of memory
@@ -1753,8 +1752,9 @@ how to close threads
 	- join ignores non-threads
 		- join returns pointer to stack that will be released to the user
 	- if no processes/threads, return -1, else sleep, wait for children proccesses/threads to finish
-# Chap 5 Synchronisation  
 
+
+# Chap 4 CPU Scheduling  
 ### What is CPU scheduling
 OS decision-making processes for selecting which process runs on CPU when multiple processes ready
 part of process management
@@ -1967,7 +1967,7 @@ start `scheduler()` from proc.c
 
 ## How many procs can run concurrently in xv6
 
-param.h dictates global constants; including process limits, buffer sizes ect.
+param.h dictates global constants; includin*ag process limits, buffer sizes ect.
 NPROC = max num processes in system
 NCPU = num CPUs xv6 supports
 - each CPU runs own `scheduler()` loop
@@ -1980,7 +1980,331 @@ e.g.
 load certain parts into ram with paging and offset
 
 
+
+# Chap 5 Synchronisation  
+
+## What is Sync
+- Coordination of multiple processes to ensure correct execution
+- Prevents race conditions when accessing shared resources
+- Ensure correctness, fairness and cooperation
+
+## Why sync
+
+| Prevent Race Condition                                               | Ensure Correctness                                                                                             | Support Cooperation                                                                                      |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Concurrent proc can overwrite each other,<br>can corrupt shared data | Critical sections must execute atomically<br><br>guarantees mutual exclusion so shared data remains consistent | Enables structured interactions like producer consumer and client–server models<br><br>Coordinates tasks |
+
+When no sync
+
+| Data Inconsistency                 | Unpredictable Behaviour          | System Failures                   |
+| ---------------------------------- | -------------------------------- | --------------------------------- |
+| Shared resource could be corrupted | Outputs vary depending on timing | Crashes due to data inconsistency |
+
+## How do race condition occur
+
+outcome depends on order of events
+multiple procs try to access shared resource simultanneeously
+results unpredictable, depend on who get there first
+
+e.g.; instruction interleaving
+read modify write,
+CPU execs multiple procs, proc A and B, simultaneously
+switch between procs, execution interleaved
+if procs overlap these steps, results inconsistent
+
+
+## What is critical section
+
+part of a program where shared resources are accessed
+
+Only one process should execute a critical section at a time to avoid conflicts
+- Protect shared data from concurrent modifications
+- Ensure operations on shared resources are performed atomically
+- Prevent race conditions
+
+| Solutions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mutual Exclusion                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Progress                                                                                                                                                                                                                                                                                                     | Bounded Waiting                                                                                                                                                                                                                 |
+| If process Pi is executing in its critical section with respect to a particular resource, then no other processes can be executing in their critical sections<br><br>There is a queue to access critical sections<br><br>Can be optimized by differentiating between writers and readers over a share variable v:<br>- Only one process Pi is executing in its critical section writing on a shared variable v, then no other processes can be executing in their critical sections<br>- n processes P0 … Pn are executing in its critical section as far as none of them is writing over the shared variable v | If<br>- no process is executing in its critical section<br>and<br>- there exist some processes that wish to enter their critical section<br><br>then the selection of the processes that will enter the critical section next cannot be postponed indefinitely of them is writing over the shared variable v | Proc A and B<br><br>Proc A request to enter critical section<br><br>Proc B loops faster, keeps hogging critical section<br><br>the must be bound to how many times B enters own critical section after Proc A request to enter. |
+
+### How to identify Critical Section
+May be better to sacrifice performance than create conflicts / race conditions
+
+See where shared resources used like
+- variables accessed by multiple threads/procs
+- Shared files, sockets, or memory regions
+- e.g. global counters, buffers, or tables
+
+Read-Modify-Write Patterns
+- Operations that read a value, change it, and write it back
+- vulnerable to race conditions if not protected
+
+Resource Allocation / Release
+- Code that acquires or releases resources (e.g., memory, file handles)
+- protect to avoid leaks or double frees
+
+## Solutions to Critical Section problems
+
+| Preemptive                                                                                                           | Non-preemptive and Single CPU                                                                     |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| allow pre-emption of proc running in kernel mode<br><br>needs synchronization mechanisms to control mutual Exclusion | Essentially free of race condition in kernel mode but have problem w/ progress or bounded waiting |
+### Synchronization hardware
+involve ideas of locking
+
+Uniprocessors can disable interrupts
+- Currently running code would execute w/ preemption
+- Generally inefficient for multi processor systems, not broadly scalable
+
+Modern systems use ***atomic hardware instructions*** - atomic = non-interruptible
+- test_and_set: test mem word and set value
+- compare_and_swap: swap contents of two mem words
+- is indivisible, all or nothing
+- no other procs can observe / interfere while atomic inst executing
+- prevent race condition be ensuring updates to shared resources happen in single step
+- is the foundation for locks ,semaphores and other synchronization primitives
+
+#### Locks
+used to enforce ***Mutual Exclusion (mutex)***
+
+ensure only 1 proc can enter critical section at a time
+Acquire(lock): proc requests exclusive access, if lock free, enter, else wait
+Release(unlock): when finished, proc frees lock to allow others to enter
+
+Status: Locked  vs  Unlocked
+
+| Types of locks                                                                                                                                                                                                      |                                                                                                                                                                                                           |                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| Spinlock                                                                                                                                                                                                            | Mutex                                                                                                                                                                                                     | Read-Write                              |
+| Proc wait actively (Busy waiting)                                                                                                                                                                                   | Proc sleeps until lock available                                                                                                                                                                          | Allow multiple reader but only 1 writer |
+| thread repeatedly checks (spins) until lock available<br>Called busy waiting<br>loop continuously to check<br><br>uses test_and_set on lock, since is only 1 step, will never be interfered with by other processes | Provides Ownership only the thread locking in the mutex can unlock it.<br><br>When the thread finishes, it unlocks the mutex, allowing another thread to proceed<br><br>Used in typically in Kernel Mode. |                                         |
+| Advantage<br>- Very fast for short critical sections<br>- No context switch overhead<br>- Useful in multiprocessor systems for quick mutual exclusion<br>- Used in kernel mode when prefer not to sleep             | Advantage<br>- Does not waste cycles with busy waiting.                                                                                                                                                   |                                         |
+| Disadvantages<br>- Wastes CPU cycles if lock is held for long<br>- Not suitable for long critical sections<br>- Can lead to starvation if not managed properly                                                      |                                                                                                                                                                                                           |                                         |
+
+## What is a Semaphore
+is a synchronization primitive that uses a counter to control access to resources
+
+Unlike a lock (binary), semaphores can allow multiple processes to access a resource up to a defined limit
+
+| Lock                                                                     | Semaphore                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Binary (locked/unlocked)                                                 | Counting mechanism (value ≥ 0)                                                                                                                                                                               |
+| Enforce mutual exclusion (only one process in the critical section)      | Can allow multiple processes to proceed simultaneously (e.g., multiple readers)<br><br>Support signaling between processes (e.g., producer–consumer coordination)                                            |
+| For example, only one student can ask the Professor a question at a time | For example, several students can ask questions simultaneously, up to the number of tokens<br><br>Signalling/Synchronisation: A student finishes asking and signals another student that the teacher is free |
+
+Can be used to allow `n` procs to enter critical section, forces other procs after limit to sleep
+e.g.
+procs A, B, C, D
+Semaphore limit is 3
+procs execute A to D
+A, B, C can enter critical section, decrementing Semaphore each time
+D attempt to enter, Semaphore deny as = 0, send D to sleep
+When any proc exits, Signal to Semaphore to increment
+Semaphore then wakes D and allow entry, D decrement Semaphore
+
+Can be used to force procs to exec in certain order
+Proc A and B, proc B must run after proc A
+So B will check if Semaphore > 0;
+- if proc A run first, 
+	- set Semaphore to 1,
+	- then B runs,
+	- see Semaphore is >0,
+	- runs normally
+- if proc B run first,
+	- see Semaphore is 0,
+	- B get sent to sleep,
+	- proc A run,
+	- Set semaphore to 1,
+	- Semaphore wakes B,
+	- then B runs,
+	- see Semaphore is >0,
+	- runs normally
+
+#### Do semaphores wake procs? or is it OS or scheduler
+proc lifecycle: runable -> run -> sleep or end
+from sleep can become runable
+scheduler takes runable and makes it running
+scheduler takes running and make it runable
+
+if proc is sleep, can be
+- wake after timer
+- sleeping on resource, wake by os or wake by processes currently holding resource
+
+thus, Semaphore wakes using the signal()
+if semaphore incorrectly used, can cause infinite wait, called deadlock
+### Semaphore Operations
+Wait(P)
+- Decrement Counter
+- if counter negative, proc waits
+Signal(V)
+- Increment counter
+- if have waiting procs, one is released
+
+### Types of Semaphores
+Binary Semaphore
+- Counter is 0 / 1
+- act like lock
+Counting Semaphore
+- Counter can be >1
+- allow multiple procs to access simultaneously
+
+### Semaphore problems
+Incorrect use of semaphore ops
+- signal(mutex) ...... wait(mutex)
+	- signal to enter critical section before changing
+	- all procs can enter
+- wait(mutex) ...... wait(mutex)
+	- wait instead of signal when exiting critical section
+	- eventually proc blocks semaphore
+- omitting of signal(mutex) or wait(mutex) or both
+
+Deadlock
+
+Starvation
+
+## Producer-Consumer problem
+
+| Producer                                 | Consumer                                |
+| ---------------------------------------- | --------------------------------------- |
+| produce Data<br>place into shared buffer | removes Data from buffer for processing |
+| Must wait if buffer full                 | Must wait if buffer empty               |
+Both must coordinate to avoid race condition + ensure correctness
+shared buffer is finite size
+
+Real-world examples
+- Print spooling
+- Message queues
+- Data pipelines
+
+### PROBLEMS
+- How to prevent overwriting data when buffer is full?
+- How to prevent reading invalid data when buffer is empty?
+- How to ensure mutual exclusion when accessing the buffer?
+
+### Solutions
+Semaphores to coordinate actions
+prevent buffer overflow and underflow
+ensure save concurrent access
+
+| available                                                        | filled                                               | mutex                                                             |
+| ---------------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------- |
+| counts available slots in buffer<br>(initialized to buffer size) | counts filled slots in buffer <br>(Initialized to 0) | binary semaphore<br>ensure mutual exclusion when accessing buffer |
+
+| Producer                                                                                                                                               | Consumer                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `wait(available);`<br>`wait(mutex);`<br>`add_item();`<br>`signal(mutex);`<br>`signal(filled);`                                                         | `wait(filled);`<br>`wait(mutex);`<br>`remove_item();`<br>`signal(mutex);`<br>`signal(available);`                                                         |
+| // check for empty slot, decrement when enter<br>// enter critical section<br>// produce to buffer<br>// leave critical section<br>// increment filled | // check for filled, decrement when enter<br>// enter critical section<br>// consume from buffer<br>// leave critical section<br>// increment empty slots |
+## xv6 implementation
+
+uses spinlock; has struct in spinlock.h
+```
+struct spinlock{
+	uint locked; // is lock held
+	// debugging
+	char *name;
+	struct cpu *cpu;
+}
+```
+provide mutex by busy waiting until lock free
+
+| Pros                                                                                                                                                                                                          | Cons                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Simplicity; Avoid complexity of blocking locks in kernel<br>Predictability; ensure predictable performance in multiprocessor envs<br>Simple<br>Fast for short critical sections<br>No context switch overhead | Waste CPU cycle if lock held for long period<br><br>not suitable for user-level synchronization |
+
+### `acquire()`
+1. Disable interrupt using `push_off()`; prevent preemption
+2. Check if current CPU already holding lock with `holding(lk)`
+3. use atomic hardware inst `__sync_lock_test_and_set` to set locked w/ while loop for spinlock
+4. use `__sync_synchronise()` to enforce right order in load and stores despite optimisations in architecture for mem access;
+	- basically, compiler makes it such that proc cannot move loads or stores until after lock acquired
+5. track current cpu holding lock with `lk->cpu = mycpu();`
+
+### `release()`
+1. Check if current CPU already holding lock with `!holding(lk)`
+2. Clear CPU and untrack from lock with `lk->cpu = 0;`
+3. use `__sync_synchronise()` to enforce right order in load and stores despite optimisations in architecture for mem access;
+	- basically, compiler makes it such that proc cannot move loads or stores until after lock released
+4. release lock with `__sync_lock_release(&lk->locked);`
+5. enable interrupts to activate preemption using `pop_off();`
+
+### Where spinlocks used
+Protect ticks in `trap.c` (is the global counter tracking clock interrupts)
+- avoid race condition when multiple CPUs handle interrupts or user/kernel code reads ticks
+
+Process table in `proc.c`
+- protect access to global process table (`struct proc`)
+- ensure safe allocation, scheduling and state transitions or procs
+
+Kernel Memory Allocator (`kalloc.c`)
+- protect free mem list during alloc and dealloc
+
+File System (`fs.c`)
+- protect `inode` structures during file ops
+- ensure consistency when multiple processes read/write files
+
+Buffer Cache (`bio.c`)
+- guard the block buffer cache
+- prevent race condition when multiple procs access disk blocks
+
+console (`console.c`)
+- Synchronize access to console output
+- prevent interleaved / corrupt text when multiple procs print simultaneously
+
+### Why avoid blocking locks (as much as possible)
+- blocking lock sleeps procs if resource unavailable
+- need context switching & scheduler involvement
+- keep kernel simple
+- Critical sections are short
+	- spinning wastes little time compared to overhead of blocking & waking
+- avoid scheduler complexity
+	- blocking locks require more sophisticated scheduling and resource tracking
+- Predictability
+	- guarantee immediate lock acquisition once free w/o scheduling delays
+- Interrupt safety
+	- spinlocks can be used even when interrupts disabled unlike blocking lock
+
+### `sleep()` and `wakeup()`
+these primitives made for efficiency since procs often wait for events (pipe data, child exit, disk i/o) 
+
+`sleep(chan,lk)`
+- automatically releases lock `lk`
+	- this `lock` is NOT the lock of current proc calling sleep
+- mark proc as SLEEPING on `chan`
+- call scheduler to run another proc
+
+`wakeup(chan)`
+- iterate over proc table
+- mark all procs sleeping on `chan` as RUNNABLE
+- may revive multiple procs at once if all listening to same `chan`
+
+`sleep(void* chan, struct spinlock* lk)` implementation
+1. kernel acquire calling proc lock; need proc lock to change proc state
+2. release `lk`; can release as holding to calling proc lock and will not miss any wakeup calls for calling proc
+3. records `chan` to calling proc `chan`
+4. set proc state to SLEEPING
+5. call sched to change running proc
+6. once woken, will return here,
+7. reset this proc channel
+8. release proc lock
+9. reacquire given lock
+
+`wakeup(chan)` implementation
+1. for every proc in proc table, if not current proc, acquire lock to check state
+2. if state is SLEEPING and `chan` matches, set state to RUNNABLE
+3. then release lock
+
+usage in pipe
+Reader
+- if buffer empty, call sleep(&pi->nread, &pi->lock)
+- this sleeps reader, listening to chan &pi->nread, release reading pipe lock
+Write
+- when write to pipe, add data to buffer, then call wakeup(&pi->nread)
+- wakes all readers listening to that pipe
+- may sleep if buffer full with sleep(&pi->nwrite, &pi->lock)
+- wake by reader after consuming with wakeup(&pi->nwrite)
 # Chap 6 File Systems  
+
+
+
 
 # Chap 7 Mem Management  
 
