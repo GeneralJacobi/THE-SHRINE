@@ -867,15 +867,443 @@ T-distribution used when n < 30 as sample size not big enough to truly approxmin
 
 Z-distribution not affected by degrees of freedom
 
-# Chap 7
+# Chap 7 : VECTOR
+
+entity which possesses both magnitude and direction.
+
+## Equations
+magnitude of vector    $|v|$
+angle    $\theta$
+$V_x  = |v|\cos\theta$     (x-component)
+$V_y = |v|\sin\theta$      (y-component)
+
+$|v| = \sqrt{V_x^2 + V_y^2}$
+$\theta = \tan^{-1}(\frac{V_y}{V_x})$
+
+---------------
+
+$a = (a_x, a_y)$
+$b = (b_x, b_y)$
+
+$w = a + b$
+$w = (a_x+b_x, a_y+b_y)$
+
+--------------
+if $|\lambda| > 1$, vector is lengthened (stretched)
+if $|\lambda| < 1$, vector is shortened (shrunk)
+
+if $\lambda < 0$, direction of vector is reversed
+
+--------------
+
+$\hat{v} = \frac{v}{||v||}$
+$||v|| = \sqrt{a_1^2+a_2^2+...+a_n^2}$
+
+-----------
+vectors $a$ and $b$
+$a \cdot b = a_1b_1 + a_2b_2 + ... + a_nb_n$
+
+geometrically
+$a \cdot b = ||a||\ ||b||cos \theta$
+- $\theta$ is angle between vectors
+
+if $a \cdot b = 0$, vectors are orthogonal ($\theta = 90\degree$)
+
+-------
+
+$a \times b = (||a||\ ||b||\sin\theta)\hat{n}$
+where $\hat{n}$ is the unit normal vector determined by the right hand rule
+
+$\vec{a} \times \vec{b} = \begin{bmatrix}a_1 \cr a_2 \cr a_3\end{bmatrix} \begin{bmatrix} b_1 \cr b_2 \cr b_3\end{bmatrix} = \begin{bmatrix} a_2b_3 - a_3b_2 \cr -(a_1b_3 - a_3b_1) \cr a_1b_2 - a_2b_1\end{bmatrix}$
+
+$\vec{a} \times \vec{b} \neq \vec{b} \times \vec{a}$
+$\vec{a} \times \vec{b} = -(\vec{b} \times \vec{a})$
+
+----------
+
+$y = mx +c$
+$\begin{bmatrix}x \cr y\end{bmatrix} = \begin{bmatrix}x \cr mx +c\end{bmatrix}$
+thus
+$\vec{r} = \begin{bmatrix}x \cr mx +c\end{bmatrix}$
+
+$v = r_1 - r_0 = \begin{bmatrix}x_1\cr y_1\end{bmatrix} - \begin{bmatrix}x_0\cr y_0\end{bmatrix} = \begin{bmatrix}x_1-x_0\cr y_1-y_0\end{bmatrix}$
+
+$\vec{r} = r_0 + tv$
+$\vec{r} = \begin{bmatrix}x_0 \cr y_0 \end{bmatrix} + t\begin{bmatrix}x_1-x_0\cr y_1-y_0\end{bmatrix}$
+
+Cartesian equation / symmetric form: $\frac{x-x_0}{a} = \frac{y-y_0}{b} = \frac{z-z_0}{c}$
+
+$\vec{r} = \begin{bmatrix}x \cr y \cr z \end{bmatrix}$ 
+$x-x_0 = at$,    $x = x_0 + at$
+$y - y_0 = bt$,    $y = y_0 + bt$
+$z - z_0 = ct$,    $z = z_0 + ct$
+therefore
+$\vec{r} = r_0 + tv$
+$\vec{r} = \begin{bmatrix}x \cr y \cr z \end{bmatrix} = \begin{bmatrix}x_0+at \cr y_0+bt \cr z_0+ct \end{bmatrix} = \begin{bmatrix}x_0 \cr y_0 \cr z_0 \end{bmatrix} + \begin{bmatrix}at\cr bt \cr ct\end{bmatrix} = \begin{bmatrix}x_0 \cr y_0 \cr z_0 \end{bmatrix} + t\begin{bmatrix}a \cr b \cr c\end{bmatrix}$
+		thus $v = \begin{bmatrix}a \cr b \cr c \end{bmatrix}$
+
+-----------
+
+plane defined as either
+1. a point $r_0$ and two non-parallel direction vectors $v$ and $u$ lying on the plane
+2. a point $P_0$ (position vector $r_0$) and a **normal vector n**
+
+equation for 1.
+$r = r_0 + tv + su$
+- $t$ and $s$ are scalar parameters
+- $v = r_1 - r_0 = \begin{bmatrix}x_1\cr y_1\cr z_1\end{bmatrix} - \begin{bmatrix}x_0\cr y_0\cr z_0\end{bmatrix}$
+- $u = r_2 - r_0 = \begin{bmatrix}x_2\cr y_2\cr z_2\end{bmatrix} - \begin{bmatrix}x_0\cr y_0\cr z_0\end{bmatrix}$
+
+equation for 2.
+any point P (position vector $r = \begin{bmatrix}x\cr y\cr z\end{bmatrix}$) in the plane,
+it must satisfy the condition that the vector $\vec{P_0P}$ is orthogonal to n, meaning
+
+$\vec{P_0P} = (r - r_0)$
+$n \cdot (r - r_0) = 0$
+$\begin{bmatrix}a\cr b\cr c\end{bmatrix} \cdot (\begin{bmatrix}x\cr y\cr z\end{bmatrix} - \begin{bmatrix}x_0\cr y_0\cr z_0\end{bmatrix}) = 0$
+$\begin{bmatrix}a\cr b\cr c\end{bmatrix} \cdot \begin{bmatrix}x-x_0\cr y-y_0\cr z-z_0\end{bmatrix} = 0$
+
+$a(x-x_0) + b(y-y_0) + c(z-z_0) = 0$
+
+---------
+
+$Ax + By + Cz = K$
+
+If vector equation of line given as $r = r_0 + su + tv$
+
+## Parallelogram Rule
+sum of 2 vectors corresponds to diagonal of parallelogram formed by vectors
+
+### Co-ordinate representation
+on std coordinate system (*xy*-plane)
+vector *v* represented by its components
+
+magnitude of vector    $|v|$
+angle    $\theta$
+co-ordinates    $(V_x, V_y)$
+
+Coordinates of vector $(V_x, V_y)$, given magnitude and angle
+$V_x  = |v|\cos\theta$     (x-component)
+$V_y = |v|\sin\theta$      (y-component)
+
+Magnitude $|v|$ and Direction $\theta$, given Co-ordinates of vector
+
+$|v| = \sqrt{V_x^2 + V_y^2}$
+$\theta = \tan^{-1}(\frac{V_y}{V_x})$
+
+### Vector Addition
+
+$a = (a_x, a_y)$
+$b = (b_x, b_y)$
+
+$w = a + b$
+$w = (a_x+b_x, a_y+b_y)$
 
 
+### Scalar Multiplication
+
+scalar $\lambda$, scales vector w/o changing direction / line of action / angle
+
+if $|\lambda| > 1$, vector is lengthened (stretched)
+if $|\lambda| < 1$, vector is shortened (shrunk)
+
+if $\lambda < 0$, direction of vector is reversed
+
+## Unit Vector
+
+any vector w/ a magnitude of exactly 1
+
+Any non-zero vector can be converted into a unit vector $\hat{v}$ pointing in the same direction by dividing itself by its magnitude
+
+not magnitude is || || not | |
+| | is absolute value / modulus
+
+$\hat{v} = \frac{v}{||v||}$
+$||v|| = \sqrt{a_1^2+a_2^2+...+a_n^2}$
+
+## Basis vectors
+vectors are linearly independent if none of them can be written as linear combination of the others
+act as building blocks for the vector space
+
+--------------
+Proof:
+$c_1v_1 + c_2v_2 + c_3v_3 + ... + c_nv_n = 0$
+will have only 1 trivial solution of 
+$c_1 = c_2 = ... = c_n = 0$
+----------------
+
+Set of vectors B = {$v_1, v_1, ..., v_n$} in vector space V can be called a basis IF
+1. Linear Independence
+2. Spanning Space
+	- vectors span the whole vector space V
+	- for every vector w ∈ V, there exists scalars $a_1,a_2,...,a_n$ such that
+	- $w = a_1v_1 + a_2v_2 + ... + a_nv_n$
+
+e.g.
+standard Cartesian plane ($R^2$), std basis vecctors:
+- $\hat{i} = (1,0)$, (along the x-axis)
+- $\hat{j} = (0,1)$, (along the y-axis)
+
+this means that any vector in the plane can be expressed as a ***linear combination*** of these basis vectors
+- $v = a\hat{i} + b\hat{j}$
+
+for standard Cartesian plane ($R^3$), std basis vecctors:
+- $\hat{i} = \begin{pmatrix}1\cr0\cr0\cr\end{pmatrix}$,     $\hat{j} = \begin{pmatrix}0\cr1\cr0\cr\end{pmatrix}$,     $\hat{k} = \begin{pmatrix}0\cr0\cr1\cr\end{pmatrix}$,
+any vector $v = (x,y,z)$ can be written uniquely as $v = x\hat{i} + y\hat{j} + z\hat{k}$
+
+## Products on vectors
+
+2 ways
+- dot product
+- cross product
+
+### dot product (scalar product)
+result of multiplying 2 vectors is a scalar value
+can be viewed as magnitude of $u$ multiplied by the projection of $v$ on to $u$
+
+vectors $a$ and $b$
+$a \cdot b = a_1b_1 + a_2b_2 + ... + a_nb_n$
+
+geometrically
+$a \cdot b = ||a||\ ||b||cos \theta$
+- $\theta$ is angle between vectors
+
+Scalar formulas also allows us to calculate relationship between vectors
+- if $u \cdot v = 0$, vectors are orthogonal ($\theta = 90\degree$)
+
+### Cross Product (Vector Product)
+results in a vector that is orthogonal to BOTH input vectors
+
+$a \times b = (||a||\ ||b||\sin\theta)\hat{n}$
+where $\hat{n}$ is the unit normal vector determined by the right hand rule
+
+$\vec{a} \times \vec{b} = \begin{bmatrix}a_1 \cr a_2 \cr a_3\end{bmatrix} \begin{bmatrix} b_1 \cr b_2 \cr b_3\end{bmatrix} = \begin{bmatrix} a_2b_3 - a_3b_2 \cr -(a_1b_3 - a_3b_1) \cr a_1b_2 - a_2b_1\end{bmatrix}$
 
 
+area of parallelogram = base x height
+$\sin(\theta) = \frac{height}{side_a}$
+height = $side_a\ \sin(\theta)$
+base = $side_b$
+area of parallelogram = $side_b\ side_a\ \sin(\theta)$
+$= (||a||\ ||b||\sin\theta)$
 
-# Chap 8
+$\hat{n}$ determines direction
+so cross product of a and b is a vector in direction $\hat{n}$ with magnitude equal to area of , $\hat{n}$ is also perpendicular to a and b
+
+$\vec{a} \times \vec{b}$ will always point in direction of normal vec
+if a on right of b, is positive
+if a on left of b, is negative
+thus
+$\vec{a} \times \vec{b} \neq \vec{b} \times \vec{a}$
+$\vec{a} \times \vec{b} = -(\vec{b} \times \vec{a})$
+
+special consequences of formula
+- magnitude |$a \times b$| equals the area of the parallelogram spanned by a and b
+- if $a \times b$, vectors are parallel
+
+## Vector representation of Lines and Planes
+
+### Lines in space
+represented by using a starting position vector $r_0$ and a direction vector $v$
+
+$y = mx +c$
+$\begin{bmatrix}x \cr y\end{bmatrix} = \begin{bmatrix}x \cr mx +c\end{bmatrix}$
+thus
+$\vec{r} = \begin{bmatrix}x \cr mx +c\end{bmatrix}$
+
+$r_0$ is some arbitrary point on the line
+so the vector is from origin of graph to this point on the line
+
+next, find the vector of the line ($\vec{v}$) from point $r_0$
+can be "up" or "down" the line, doesnt matter
+to find, need another point on line $r_1$ then find 
+to find $\vec{v}$, given points $r_1$ and $r_0$
+$v = r_1 - r_0 = \begin{bmatrix}x_1\cr y_1\end{bmatrix} - \begin{bmatrix}x_0\cr y_0\end{bmatrix} = \begin{bmatrix}x_1-x_0\cr y_1-y_0\end{bmatrix}$
+
+VECTOR equation for any point $r$ on the line is 
+$\vec{r} = r_0 + tv$
+$\vec{r} = \begin{bmatrix}x_0 \cr y_0 \end{bmatrix} + t\begin{bmatrix}x_1-x_0\cr y_1-y_0\end{bmatrix}$
+where
+- t is scalar parameter
+
+vector equation not unique, change $r_0$ will change vector equation, but line is same
+vector equation works for lines in higher dimensions
+Cartesian equation / symmetric form: $\frac{x-x_0}{a} = \frac{y-y_0}{b} = \frac{z-z_0}{c}$
+purpose of vector equation $\vec{r} = \begin{bmatrix}x \cr y \cr z \end{bmatrix}$ is to represent all points on line
+so let $\frac{x-x_0}{a} = \frac{y-y_0}{b} = \frac{z-z_0}{c} = t$
+thus ( this is parametric equation )
+$x-x_0 = at$,    $x = x_0 + at$
+$y - y_0 = bt$,    $y = y_0 + bt$
+$z - z_0 = ct$,    $z = z_0 + ct$
+therefore
+$\vec{r} = r_0 + tv$
+$\vec{r} = \begin{bmatrix}x \cr y \cr z \end{bmatrix} = \begin{bmatrix}x_0+at \cr y_0+bt \cr z_0+ct \end{bmatrix} = \begin{bmatrix}x_0 \cr y_0 \cr z_0 \end{bmatrix} + \begin{bmatrix}at\cr bt \cr ct\end{bmatrix} = \begin{bmatrix}x_0 \cr y_0 \cr z_0 \end{bmatrix} + t\begin{bmatrix}a \cr b \cr c\end{bmatrix}$
+		thus $v = \begin{bmatrix}a \cr b \cr c \end{bmatrix}$
+### Planes in space
+plane defined as either
+1. a point $r_0$ and two non-parallel direction vectors $v$ and $u$ lying on the plane
+2. a point $P_0$ (position vector $r_0$) and a **normal vector n**
+
+equation for 1.
+$r = r_0 + tv + su$
+- $t$ and $s$ are scalar parameters
+- $v = r_1 - r_0 = \begin{bmatrix}x_1\cr y_1\cr z_1\end{bmatrix} - \begin{bmatrix}x_0\cr y_0\cr z_0\end{bmatrix}$
+- $u = r_2 - r_0 = \begin{bmatrix}x_2\cr y_2\cr z_2\end{bmatrix} - \begin{bmatrix}x_0\cr y_0\cr z_0\end{bmatrix}$
+
+equation for 2.
+any point P (position vector $r = \begin{bmatrix}x\cr y\cr z\end{bmatrix}$) in the plane,
+it must satisfy the condition that the vector $\vec{P_0P}$ is orthogonal to n, meaning
+
+$\vec{P_0P} = (r - r_0)$
+$n \cdot (r - r_0) = 0$
+$\begin{bmatrix}a\cr b\cr c\end{bmatrix} \cdot (\begin{bmatrix}x\cr y\cr z\end{bmatrix} - \begin{bmatrix}x_0\cr y_0\cr z_0\end{bmatrix}) = 0$
+$\begin{bmatrix}a\cr b\cr c\end{bmatrix} \cdot \begin{bmatrix}x-x_0\cr y-y_0\cr z-z_0\end{bmatrix} = 0$
+
+$a(x-x_0) + b(y-y_0) + c(z-z_0) = 0$
 
 
+### Cartesian equation of plane
+derived from plane definition
+
+$Ax + By + Cz = K$
+
+If vector equation of line given as $r = r_0 + su + tv$
+where u and v are direction vectors and are implied to lie on the plane based on definition 1
+normal of plane will be in direction of cross product of direction vectors, i.e. $n = u \times v$
+
+then, use $n \cdot (r - r_0) = 0$ to get Cartesian equation
+# Chap 8: Matrix Algebra
+
+## What is Matrix
+Matrix is array of numbers
+$m$ rows
+$n$ columns
+
+always read as $m$ by $n$ matrix / $m$ x $n$ matrix
+
+vector is $m$ x $1$ matrix
+
+$\begin{bmatrix}a_{11} & a_{12} & a_{13} & ... & a_{1n} \cr a_{21} & a_{22} & a_{23} & ... & a_{2n} \cr a_{31} & a_{32} & a_{33} & ... & a_{3n} \cr ... & ... & ... & ... & ... \cr a_{m1} & a_{m2} & a_{m3} & ... & a_{mn} \end{bmatrix}$
+
+
+### Types of Matrix
+if m = n , matrix is a square matrix
+if 1 row, matrix is row vector
+if 1 column, matrix is column vector
+if square matrix + non-zero elements are only 1's + non-zero elements on the diagonal, matrix is unit matrix / Identity
+if all elements = 0, matrix is called zero matrix
+if square matrix + non-zero elements on the diagonal, matrix diagonal matrix
+
+## What is System of Linear Equations (SLE)
+Generally of form:
+$a_{11}x_1 + a_{12}x_2 + ... + a_{1n}x_n = b_1$
+$a_{21}x_1 + a_{22}x_2 + ... + a_{2n}x_n = b_2$
+...
+$a_{m1}x_1 + a_{m2}x_2 + ... + a_{mn}x_n = b_m$
+
+$m$ equations
+$n$ unknowns, $x_1$ to $x_n$
+$a_{ij}$ constant coefficients
+$b_i$ constants of system
+
+![[SLE examples.png]]
+
+
+with equations:  $2x + 3y = 1$    and    $3x +4y = -6$
+matrix is:    $\begin{pmatrix}2 & 3 \cr 3 & 4 \end{pmatrix}$
+so its a matrix of the CONSTANT COEFFECIENTS in the equations 
+
+## Basic Matrix Ops
+
+### Matrix Equality
+2 Matrix are equal if and only if they have the same size && all elements are the same
+$A = B$
+$a_{ij} = b_{ij}$
+for $i = 1 ... m$; $j = 1 ... n$
+
+### Addition
+**CONDITION**
+2 matrix can be added ONLY if they have the same size
+Thus, corresponding elements in two matrices are added to form a single matrix
+
+e.g.
+$\begin{bmatrix} 3 & 1 & -4 \cr 4 & 3 & 1 \cr 1 & 4 & -3 \end{bmatrix}$ + $\begin{bmatrix} 2 & 7 & -5 \cr -2 & 1 & 0 \cr 6 & 3 & 4 \end{bmatrix}$ = $\begin{bmatrix} 5 & 8 & -9 \cr 2 & 4 & 1 \cr 7 & 7 & 1 \end{bmatrix}$
+
+### Subtraction
+**CONDITION**
+2 matrix can be subtracted ONLY if they have the same size
+Thus, corresponding elements in two matrices are added to form a single matrix
+
+e.g.
+$\begin{bmatrix} 3 & 1 & -4 \cr 4 & 3 & 1 \cr 1 & 4 & -3 \end{bmatrix}$ - $\begin{bmatrix} 2 & 7 & -5 \cr -2 & 1 & 0 \cr 6 & 3 & 4 \end{bmatrix}$ = $\begin{bmatrix} 1 & -6 & 1 \cr 6 & 2 & 1 \cr -5 & 1 & -7 \end{bmatrix}$
+
+### Multiplication by Scalar value
+
+$2\begin{bmatrix} 3 & 1 & -4 \cr 4 & 3 & 1 \cr 1 & 4 & -3 \end{bmatrix}$ = $\begin{bmatrix} 6 & 2 & -8 \cr 8 & 6 & 2 \cr 2 & 8 & -6 \end{bmatrix}$
+
+### Matrix Multiplication
+
+Matrix $A$ is a m x p matrix, elements $a_{ij}$
+Matrix $B$ is a p x n matrix, elements $b_{ij}$
+Product of 2 matrices, $C = AB$, $C$ is a m x n matrix
+Components defined by
+$C_{ij} = \displaystyle\sum^p_{k=1}{a_{ik}b_{kj}} = a_{i1}b_{1j} + ... + a_{ip}b_{pj}$;
+
+$\begin{bmatrix} a_1 & a_2 & a_3 \cr b_1 & b_2 & b_3 \end{bmatrix}$ $\begin{bmatrix} x_1 & x_2  \cr y_1 & y_2 \cr z_1 & z_2 \end{bmatrix}$ = $\begin{bmatrix} a_1x_1 + a_2y_1 + a_3z_1& a_1x_2 + a_2y_2 + a_3z_2 \cr b_1x_1 + b_2y_1 + b_3z_1 & b_1x_2 + b_2y_2 + b_3z_2  \end{bmatrix}$
+
+### Properties of the transpose $A^T$
+Let $A$ be m x n matrix with elements $a_{ij}$
+The transpose of $A$, written as $A^T$ is the n x m matrix with elements $a_{ji}$
+
+Other properties:
+$(A^T)^T = A$
+$(A+B)^T = A^T + B^T$
+$(AB)^T = B^TA^T$
+Matrix is called symmetric if    $A^T = A$
+Matrix is called skew-symmetric if    $A^T = -A$
+
+e.g.
+$A = \begin{bmatrix} 2 & 3 \cr 1 & 2 \cr 4 & 5 \end{bmatrix}$
+$A^T = \begin{bmatrix} 2 & 1 & 4 \cr 3 & 2 & 5 \end{bmatrix}$
+
+### Commutative Law
+Applies to matrices
+$A + B = B + A$
+$AB = BA$
+
+### Associative Law
+Applies to matrices
+$(A + B) + C = A + (B + C)$
+$A(BC) = (AB)C$
+
+### Distributive Law
+Applies to matrices
+$\lambda(A + B) = \lambda A + \lambda B$
+$(A + B)B = AC + BC$
+
+### Multiplication by unit matrix
+$IA = A = AI$
+
+### Transpose of a product
+$(AB)^T = B^TA^T$
+
+## 2x2 Determinant
+Given square matrix $A = \begin{bmatrix} a & b \cr c & d \end{bmatrix}$
+Determinant $|A|$ or $det\ A$
+
+$|A| = ad - bc$
+
+## Simultaneous linear equation w. 2x2 determinants
+
+
+## 3x3 Determinant
+Given square matrix $A = \begin{bmatrix} a_1 & a_2 & a_3 \cr b_1 & b_2 & b_3 \cr c_1 & c_2 & c_3\end{bmatrix}$
+minor of element $b_2$ in matrix $A = \begin{bmatrix} a_1 & a_3 \cr c1 & c3 \end{bmatrix}$
+"covering up other elements in the row and column", $a_2, c_2, b_1, b_3$ are not part of the minor matrix
+## Adjoint, Cofactor, inverse
+
+
+## Linear Equations in Matrix Form
 
 # Chap 9
 
