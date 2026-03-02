@@ -513,7 +513,7 @@ What are the port priorities in the BPDUs captured at PC-A, PC-B and PC-C? Why
 	- port 12
 	- to bridge
 
-### part d
+## part d
 
 ##### Cmd
 
@@ -559,3 +559,215 @@ after preempt
 Which router is the active router?    DSW1 has become active route based on priority
 
 Why would there be a need for redundancy in a LAN? To ensure end users connection not interrupted in case of fault; i.e. fault tolerance and maximize availability
+
+# Lab 7
+
+
+### Cmds
+
+no switchport - port act as router port
+interface loopback \[id] / interface lo \[id]
+
+\[id] range: 0 - 2147483647
+
+ip route \[net addr] \[mask] \[optional exit intf] \[nexthop ip]
+
+ip ospf 1
+
+network \[network ip addr, the ending in 0 one] \[inverse network mask] area \[area ID]
+	---------- applies ospf for whole device, lets device figure out which interface
+ip ospf 1 area \[area ID]
+	---------- after interface cmd, tells router to find out what network this int on using OSPF
+show ip ospf neighbour
+	---------- displays  neighbours, is non-
+show ip protocols
+	---------- displays active protocols
+show ip ospf
+	---------- show proc ID, router ID, OSPF area info, last OSPF calculation
+show ip ospf interface brief
+	---------- summary of interfaces, id, area, ip/mask, cost, state, neighbours
+show ip ospf interface g0/1/0
+	---------- show many info, impt is timer, hello packets
+
+router-id \[id like ip addr]
+  
+passive-interface \[interface]
+	---------- after router ospf 1, prevent OSPF packets from being sent over this interface
+passive-interface default
+	---------- sets all interfaces using OSPF to be passive by default
+
+  
+auto-cost reference-bandwidth \[integer]
+	---------- cost formula $\frac{cost\_reference}{interface\_speed}$, this increases cost_reference
+
+bandwidth \[integer]
+	---------- after selecting specific interface, change bandwwidth, in Kbps
+
+ip ospf cost \[integer]
+	---------- changes ospf cost without following formula
+
+## Part a
+
+Test connectivity by pinging from each PC to the default gateway that has been configured for that host. 
+From PC-A, is it possible to ping its default gateway?  -  yes can
+From PC-C, is it possible to ping its default gateway?  -  yes can
+
+Test connectivity by pinging between the directly connected router and layer-3 switch.  
+From DSW2, is it possible to ping the G0/0/1 interface of R1?  -  yes can ping 10.1.1.2
+
+
+From PC-A, is it possible to ping PC-C?  -  unreachable; no route from router to 192.168.0.0, need define route through 10.1.1.0
+From PC-A, is it possible to ping Lo0?  -  unreachable
+From PC-A, is it possible to ping Lo1?  -  unreachable
+
+
+Check the status of the interfaces on DSW2 with the show ip interface brief command.  
+How many interfaces are activated on DSW2?
+4 interface
+Vlan1
+G1/0/1
+G1/0/10
+AP1/0/1
+
+Check the status of the interfaces on R1.  
+How many interfaces are activated on R1?
+4 interfaces
+G0/1/1
+G0/0/1
+Lo0
+Lo1
+
+View the routing table information for DSW2 using the show ip route command.  
+What networks are present in the Addressing Table of this lab, but not in the routing table of DSW2? 
+10.0.0.0/0: Variably subnetted; 2 subnet 2 mask
+C 10.1.1.0/30 G1/0/1 direct connect
+L 10.1.1.1/32 G1/0/1 direct connect
+192.168.0.0/24; variably subnetted; 2 subnet 2 masks
+C 192.168.0.0/24 ; direct connect
+L 192.168.0.1/32 ; direct connect
+
+View the routing table information for R1.  
+What networks are present in the Addressing Table in this lab, but not in the routing table of R1?
+10.0.0.0/8; variably subnet; 2 masks
+C 10.1.1.0/30 G1/0/1 direct connect
+L 10.1.1.2/32 G1/0/1 direct connect
+192.168.0.0/24; variably subnet; 2 subnet 2 masks
+C 192.168.1.0/24 ; vlan1; direct connect
+L 192.168.1.1/32 ; vlan1 ;direct connect
+198.133.219.0/24 ; 2 subnet 2 masks
+C 198.133.219.0/24; lo1 ; direct connect
+L 198.133.219.1/32; lo1 ; direct connect
+209.165.200.0/24; variably subnet; 2 subnet 2 mask
+C 209.165.200.224/27; lo0 ; direct connect
+L 209.165.200.225/32 ; lo0 ; direct connect
+
+
+View the routing table to verify the new static route entry.  
+How is this new route listed in the routing table
+S 192.168.1.0/24\[1/0] via 10.1.1.2
+
+From host PC-A, is it possible to ping host PC-C? Why or why not?
+Cannot, unreachable. PC-C unable to reply as router has no path to forward to 192.168.0.0
+
+View the routing table to verify the new static route entry.  
+How is this new route listed in the routing table
+S 192.168.0.0/24\[1/0] via 10.1.1.1 GigabitEthernet0/0/1
+
+From host PC-A, is it possible to ping host PC-C now?
+yes can, has route to send reply packet
+
+
+
+View the routing table to verify the new static route entry.  
+How are these new routes listed in the routing table?
+S 198.133.219.0/24 \[1/0] via 10.1.1.2
+
+209.165.200.0/30 is subnetted, 1 subnets
+S  209.165.200.224 \[1/0] via 10.1.1.2
+
+From host PC-A, is it possible to ping Lo0 address 198.133.219.1?
+yes can because able to find route from DSW2 to router loopback
+
+remove
+How many network routes are listed in the routing table on DSW2? 
+3 networks
+Is the Gateway of last resort set?
+no is not set
+
+default gateway
+How is this new route listed in the routing table?
+S\* 0.0.0.0 \[1/0] via 10.1.1.2 GigabitEthernet1/0/1
+
+What is the Gateway of last resort?
+10.1.1.2 to network 0.0.0.0
+its the address to send if no matching learned or static routes
+
+
+From host PC-A, is it possible to ping the 209.165.200.225?  
+From host PC-A, is it possible to ping the 198.133.219.1?
+
+1. A new network 192.168.3.0/24 is connected to interface VLAN 3 on DSW2. What commands could be used to configure a static route to that network from R1?  
+	- ip route 192.168.3.0 255.255.255.0 10.1.1.1 
+	- ip route 192.168.3.0 255.255.255.0 G1/0/1 10.1.1.1 
+	- ip route 192.168.3.0 255.255.255.0 G1/0/1
+2. Is there a benefit to configuring a fully-specified static route instead of a recursive static route?  
+	- fully specified tells router which interface to send whereas recursive requires router to scan interfaces for matching ip addr
+3. Why is it important to configure a default route on a router?
+	- Efficiency, need to store fewer tables
+	- Connectivity, allow router to send packets without specific network in routing table
+	- Simplicity, simplify routing table, have general entry exit, reduce CPU and mem usage
+
+## Part b
+The OSPF router ID is used to uniquely identify the router in the OSPF routing domain. Cisco routers derive  
+the router ID in one of three ways and with the following precedence:  
+1) IP address configured with the OSPF router-id command, if present  
+2) Highest IP address of any of the router’s loopback addresses, if present  
+3) Highest active IP address on any of the router’s physical interfaces
+
+#### Qn
+What interface is DSW1 using to route to the 192.168.2.0/24 network?  
+g1/0/1 shown using show ip route
+
+What is the accumulated cost metric for the 192.168.2.0/24 network on DSW1?  
+3 found by show ip route: 192.168.1.0/24 \[110/3] via 192.168.23.1, 00:00:06, GigabitEthernet1/0/2
+
+Does R2 show up as an OSPF neighbor on R1?  
+no, because no hello packet
+because all passive default
+
+Does R2 show up as an OSPF neighbor on DSW1?  
+no, because no hello packet
+because all passive default
+
+What does this information tell you?
+passive default removes R2 from OSPF network as no other devices OSPF receive Hello packets to know that R2 OSPF is up
+
+Change interface G0/1/0 on R2 to allow it to advertise OSPF routes. Record the commands used below.
+no passive-interface g0/1/0
+
+What interface is DSW1 using to route to the 192.168.2.0/24 network now?  
+g1/0/2
+
+What is the accumulated cost metric for the 192.168.2.0/24 network on DSW1 and how is this  
+calculated?  
+cost is now 2
+cost of all links + cost of final outgoing link to network
+
+Is R2 listed as an OSPF neighbor on DSW1?
+yes
+
+Issue the bandwidth 128 command on all remaining interfaces connecting the routers and layer-3 switch  
+in the topology. What is the new accumulated cost to 192.168.23.0/24 network on R1? Why?
+new cost is 1564, need use ospf to go to network, passes through 2 different outgoing interfaces, sum the cost
+
+Explain why the route to the 192.168.3.0/24 network on R1 is now going through R2?
+ospf cost of int 0/0/1 is 1565 which is  > cumilative cost of int 0/0/0 of 1563
+
+1. Why is it important to control the router ID assignment when using the OSPF protocol?  
+	- ensure network stability, prevent neighbor adjacency failures, and guarantee accurate Dijkstra shortest-path calculations
+2. Why would you want to set an OSPF interface to passive?
+	- reduce network traffic, Stops the sending of periodic Hello packets on interfaces that do not have other OSPF routers, conserver resources
+	- prevent neighbor adjacency but still connect subnet to OSPF
+	- **Security:** Prevents routers from establishing adjacencies with unintended or unauthorized devices
+	- **Network Stability:** Prevents accidental adjacency formation with misconfigured devices on user segments, which could cause routing instability
+	- **Advertising Stub Networks:** Allows a router to advertise a network (such as a connected server subnet) to the rest of the OSPF area without attempting to speak the protocol on that segment.

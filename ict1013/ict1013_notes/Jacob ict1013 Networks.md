@@ -741,9 +741,232 @@ improve network availability
 ## Redundancy
 achieved by:
 multiple links from each access switch to diff distribution switch
+multiple links from each distribution switch to different core switches
+
+## Network Latency solutions; EtherChannel
+link aggregation =  combining multiple parallel physical links into a single higher-bandwidth logical link
+avoid causing unnecessary delay and latency
+
+link aggregation adv
+- Redundancy
+	- network connectivity as long as at least one physical link is up
+- Load-balancing
+	- network traffic load can be spread across all active physical links
+
+Type of link aggregation
+- EtherChannel    aka port-channel / channel-group
+
+3 ways to do
+- Static Config
+	- do for all interfaces on both sides that you want to be in same logical group
+	- steps
+		- `interface [int id]`
+		- `channel-group [id] mode on`
+- (PAgP) Port Aggregation Protocol
+	- is Cisco Proprietary protocol
+	- auto negotiate formation of channel
+	- steps
+		- `interface [int id]`
+		- `channel-group [id] mode desirable/auto`
+		- note need 1 side be desirable, otherside can either
+- (LACP) Link Aggregation Control Protocol
+	- is IEEE standard 802.3ad
+	- also negotiate channel formation
+	- steps
+		- `interface [int id]`
+		- `channel-group [id] mode active/passive`
+		- note need 1 side be active, otherside can either
+NOTE
+Static cannot work with PAgP cannot work with LACP
+cannot mix desirable/auto and active/passive
+
+### Layer-2 vs Layer-3 EtherChannel
+
+access to dist connections  = generally trunk type (to support VLAN routing)
+dist to core links = point to point comms, actually more efficient to use routing instead
+
+to support routing, layer 3 switch can change interface to routed interface instead of default switch interface
+thats what `no switchport` does
+
+setup for Layer 3 EtherChannel is same as Layer 2
+only diff is routed interface
+## Bandwidth Oversubscription
+
+Enterprise networks connect many devices together,
+to avoid sending too much data and using all bandwidth, following ratios should be adhered to
+
+| Access-to-dist                                                                                                                                    | User-to-access                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4 access : 1 dist                                                                                                                                 | 20 users : 1 dist                                                                                                                                     |
+| if < ratio, speed of dist-to-core link = speed of access-to-dist link<br>if > ratio: speed of dist-to-core link = 2x speed of access-to-dist link | if < ratio, speed of access-to-dist link = speed of user-to-access link<br>if > ratio: speed of access-to-dist link = 2x speed of user-to-access link |
+
+## Comms Loops
+
+resultant problems
+- Broadcast storm
+	- broadcast and multicast frames, flooded out by the switch
+	- loop endlessly in the network
+	- use bandwidth
+	- maybe bring the network to a halt;
+- MAC table instability
+	- unicast frames with destination MAC addresses not found in the MAC address table flood; loop endlessly
+	- frames with the same source MAC addresses will be received from different switchports
+		- will keep updating the MAC address table, unstable
+- Multiple copies of same frame
+
+## RSTP
+Dynamically block ports to prevent loops which prevent broadcast storm
+
+Cisco Switch run **Rapid Per-VLAN Spanning Tree (PVST+)**
+is independent instance of RSTP for each VLAN
+### Phase 1: Elect root bridge/switch
+Upon boot, switch assumes self is root,
+send out **hello bridge protocol data unit (BPDU)** on all interface periodically
+
+
+| Root ID                                                                                                                                                                                                                                                         | Root path cost | Bridge ID                                                                                                                                                                                                                                                                                                   | Port ID                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| 8 Byte                                                                                                                                                                                                                                                          | 4 byte         | 8 byte                                                                                                                                                                                                                                                                                                      | 2 byte                                                                  |
+| BID of the elected root bridge<br><br>Will update over time as the switches self elect lowest ID<br><br>Say S2 receives S1 BDPU frame and S1 BID is lower,<br>S2 will not make own BDPU frame anymore<br>Will Update path cost S1 BDPU frame and append own BID |                | 2 sub fields<br>- priority - 2 bytes<br>- system ID (MAC addr of switch broadcasting this frame) - 6 bytes<br><br><br>OR<br><br><br>3 fields<br>- priority (multiple of 4096, e.g. b1000 = 8x4096) - 4 bits<br>- System ID extension (Typically holds VLANID) - 12 bits<br>- system ID (MAC addr) - 6 bytes | 2 sub fields<br>- Port Priority - 4 bits<br>- Port Identifier - 12 bits |
+
+When assuming self as root, Root ID is own ID
+so first broadcast is own ID as Root
+Switch with lowest BID will self elect after broadcasting a while
+higher BID switches will receive BPDU frame with lower BID and forward that frame w/ edited cost
+
+On a logical topo level of planning, root switch shld be distribution switch w/ alternate root also distribution switch
+
+**DEFAULT VLAN 1 USES 2 BYTE PRIO**
+**default value 32768+1    =    32769**
+### Phase 2: Elect root port per non-root bridge/switch
+Electing root port based on rules / **TIE BREAKER RULES**
+1. Path cost
+2. Seen BPDU w/ Lowest sender BID (not Root ID)
+3. Seen BPDU w/ lowest sender port Priority
+4. Seen BPDU w/ lowest port number
+
+To elect own root port:
+- See which interfaces receive BPDU frames
+- Each interface calculate interface root path cost
+- lowest cost interface is elected
+#### Path cost / interface root path cost
+indicate relative cost to reach root
+
+Say SW1 is root, SW2 is non root connected directly
+SW2 knows SW1 is root;    adds 20000 to path cost
+SW2 will forward the BDPU frame it received from SW1 w/ edited cost of 20000
+
+***interface root path cost = BPDU root path cost + interface cost***
+
+interface cost changes depending on which interface receives the BDPU frame
+Follows table below
+Can manually configure also
+
+| Interface speed | Spanning-tree port cost |
+| --------------- | ----------------------- |
+| 10 Mbps         | 2 000 000               |
+| 100 Mbps        | 200 000                 |
+| 1 Gbps          | 20 000                  |
+| 2-8 Gbps        | 10 000                  |
+| 10 Gbps         | 2 000                   |
+| 40 Gbps         | 500                     |
+| 1 Tbps          | 20                      |
+| 10 Tbps         | 2                       |
+
+#### Port Priority and Identifier
+
+port priority is configurable
+Port priority interpreted as multiples of 16
+b1000 = 8x 16 = decimal 128
+
+port identifier = port num
+not configurable
+
+Port Priority != Bridge Priority
+Changing Port Priority will not affect Cost
+### Phase 3: Elect designated / alternate (blocked) ports
+
+Root port assigned
+Non-root decide if self is Designated / Alternate (Blocked/Discarding)
+
+Designated = will send updated BPDU frames
+Alternate (Blocked/Discarding) = will not send updated BPDU frames, CAN STILL RECIEVE
+
+Alternative can change direct to forwarding state w/o waiting to learn state
+already knows it is ready to take over
+faster convergence time
+
+TIE BREAKER RULES FOR DESIGNATED/ALTERNATE PORTS
+1. Path cost in Sent BPDU frame < Path Cost in Received BPDU frame
+2. lower BID
+ADDITIONAL RULES
+- Root Bridge ports cost always 0, all ports (unless configured manually) Designated
+- Any ports that sent out BPDU but do not receive reply BPDU will be Designated 
+
+| Port Role       | Function                                                                                                                                                                    |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Root Port       | Non-root switch's best path to root                                                                                                                                         |
+| Alternate Port  | Replaces root port when root port fails<br>Standby root port                                                                                                                |
+| Designated Port | Switch port designated to forward frames<br>Will never replace Root port<br>- is not connection towards root device<br>- is relied on by other devices to reach root device |
+| Disabled Port   | Administratively Disabled                                                                                                                                                   |
+Summary of Port Role/State and Function
+defined in the original IEEE 802.1D STP and the enhanced IEEE 802.1w RSTP
+Blocking is STP;    Discarding is RSTP;    Supposed to replace blocking but whatever, interchangeably used
+
+| 802.1D (STP) State | 802.1w (RSTP) State | Forward Data Frames? | Learn MAC addrs based on received frames? | Stable? Transitory? |
+| ------------------ | ------------------- | -------------------- | ----------------------------------------- | ------------------- |
+| Disabled           | Discarding          | No                   | No                                        | Stable              |
+| Blocking           | Discarding          | No                   | No                                        | Stable              |
+| Listening          | Not Used            | No                   | No                                        | Transitory          |
+| Listening          | Learning            | No                   | Yes                                       | Transitory          |
+| Forwarding         | Forwarding          | Yes                  | Yes                                       | Stable              |
+Behavior table for STP and RSTP interchangeable port
+
+## FHRP; First-Hop Redundancy Protocol
+What if switch w/ default gateway fail?
+how to reduce impact to user
+
+These protocols solves by enabling another router as alternative default gateway
+ideally:
+- fail-over transparent
+- no re-configuration by engineer
+- minimum down-time (users dont notice)
+
+Have few FHRP protocols
+one is **Hot Standby Routing Protocol (HSRP)**
+
+### **Hot Standby Routing Protocol (HSRP)**
+CISCO PROPRIETARY
+
+Gives Default Gateway virtual IP address
+
+E.g.
+Default Gateway is 10.1.1.1
+R1 actual addr is 10.1.1.9
+R2 actual addr is 10.1.1.129
+One will be elected active e.g. R1
+R1 will send periodically send HSRP packets to standby routers
+HSRP protocol causes ARP table to associate virtual IP w/ generated Virtual MAC addr (VMAC)
+if R1 die, standby routers dont hear HSRP packets, will activate and take over
+
+how take over?
+Gratuitous ARP (GARP)
+send ARP reply w/o receiving ARP request
+claims ownership of the virtual IP and virtual MAC addr
+updates MAC addr table in connected switches
+DOES NOT UPDATE ARP TABLE
+
+if using distribution switch as HSRP default gateway, recommended load balance by assigning default gateway to some VLANS to DSW1 and  default gateway to other VLANS to DSW2
+
+HSRP DOES NOT AUTO LOAD BALANCE
 
 
 # Topic 7 | Network Layer V : Static Routing and Dynamic Routing Protocols
+
+Routing Table maintained by network layer, determines next hop
+When interface assigned ip addr, update table with the network of that addr as it is now directly connected
+
+Static routes are added by engineer, adds route to routing table (adds next hop addr) for traffic going to that to remote network / subnet
 
 
 # Topic 8 | Network Layer VI : ICMP and NAT
