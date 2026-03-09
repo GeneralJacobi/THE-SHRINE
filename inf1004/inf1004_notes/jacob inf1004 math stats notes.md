@@ -1289,9 +1289,9 @@ $(AB)^T = B^TA^T$
 
 ## 2x2 Determinant
 Given square matrix $A = \begin{bmatrix} a & b \cr c & d \end{bmatrix}$
-Determinant $|A|$ or $det\ A$
+Determinant $|A|$ or $det(A)$
 
-$|A| = ad - bc$
+$det(A) = ad - bc$
 
 ## Simultaneous linear equation w. 2x2 determinants
 
